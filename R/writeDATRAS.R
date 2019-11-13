@@ -1,8 +1,8 @@
 writeDATRAS <- function(cruiseCodeSeries) {
 
-  source("R/DATRASFunctions.R")
-  source("R/DATRASSQL.R")
-  source("R/populateDATRAS.R")
+  #source("R/DATRASFunctions.R")
+  #source("R/DATRASSQL.R")
+  #source("R/populateDATRAS.R")
 
 cat("Extracting DATRAS data")
 
