@@ -436,19 +436,19 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
 
       caline <- paste(caline, cruiseInfo[["SurveyAreaType"]], sep = ",") #CAF14 - Area Code Type (updated)
 
-      if (cruiseInfo[["SurveyAreaType"]] == 0) {
-        stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
-        statsq <- sqlQuery(channel, stat_sql)
-        AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
-      } else {
-        acode_sql <- paste("SELECT TOP 1 fldStratum FROM dbo.tblDataStationLogs WHERE fldCruiseName='", cruiseCode,"' AND fldCruiseStationNumber=", ca_data$Haul[b], sep = "")
-        acode <- sqlQuery(channel, acode_sql)
-        AreaCode <- acode[, 1]
-      }
+      #if (cruiseInfo[["SurveyAreaType"]] == 0) {
+      #  stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
+      #  statsq <- sqlQuery(channel, stat_sql)
+      #  AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
+      #} else {
+      #  acode_sql <- paste("SELECT TOP 1 fldStratum FROM dbo.tblDataStationLogs WHERE fldCruiseName='", cruiseCode,"' AND fldCruiseStationNumber=", ca_data$Haul[b], sep = "")
+      #  acode <- sqlQuery(channel, acode_sql)
+      #  AreaCode <- acode[, 1]
+      #}
 
-      #stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
-      #statsq <- sqlQuery(channel, stat_sql)
-      #AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
+      stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
+      statsq <- sqlQuery(channel, stat_sql)
+      AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
 
       caline <- paste(caline, AreaCode , sep = ",") #CAF15 - AreaCode
 
@@ -567,19 +567,19 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
       caline <- paste(caline, cruiseInfo[["SurveyAreaType"]], sep = ",") #CAF14 - Area Code Type (updated)
 
-      if (cruiseInfo[["SurveyAreaType"]] == 0) {
-        stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
-        statsq <- sqlQuery(channel, stat_sql)
-        AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
-      } else {
-        acode_sql <- paste("SELECT TOP 1 fldStratum FROM dbo.tblDataStationLogs WHERE fldCruiseName='", cruiseCode,"' AND fldCruiseStationNumber=", ca_data$Haul[b], sep = "")
-        acode <- sqlQuery(channel, acode_sql)
-        AreaCode <- acode[, 1]
-      }
+      #if (cruiseInfo[["SurveyAreaType"]] == 0) {
+      #  stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
+      #  statsq <- sqlQuery(channel, stat_sql)
+      #  AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
+      #} else {
+      #  acode_sql <- paste("SELECT TOP 1 fldStratum FROM dbo.tblDataStationLogs WHERE fldCruiseName='", cruiseCode,"' AND fldCruiseStationNumber=", ca_data$Haul[b], sep = "")
+      #  acode <- sqlQuery(channel, acode_sql)
+      #  AreaCode <- acode[, 1]
+      #}
 
-      #stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
-      #statsq <- sqlQuery(channel, stat_sql)
-      #AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
+      stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
+      statsq <- sqlQuery(channel, stat_sql)
+      AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
 
       caline <- paste(caline, AreaCode , sep = ",") #CAF15 - AreaCode
 
@@ -627,4 +627,4 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 }
 
-# 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously startum or stat sq if no stratum available)
+# 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
