@@ -63,7 +63,7 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     rm(g)
 
     lfrqData <- merge(lfrqData, gearCodes, by.x = "GearCode", by.y = "GearCode")
-    lfrqData <- lfrqData[,c("CruiseName","Haul","GearCode","GearName","Species","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
+    lfrqData <- lfrqData[,c("CruiseName","Haul","GearCode","GearName","Species","LatinName","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
     lfrqData$RaisedNumber <- round(lfrqData$RaisedNumber)
 
     if(cruiseTable$fldCruiseClosed[cruiseTable$fldCruiseName == cruiseCode & cruiseTable$fldSeriesName == cruiseSeries] == "N") {
@@ -99,7 +99,7 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
       }
       rm(g)
       lfrqDataList[[j]] <- merge(lfrqDataTemp, gearCodes, by.x = "GearCode", by.y = "GearCode")
-      lfrqDataList[[j]] <- lfrqDataList[[j]][,c("CruiseName","Haul","GearCode","GearName","Species","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
+      lfrqDataList[[j]] <- lfrqDataList[[j]][,c("CruiseName","Haul","GearCode","GearName","Species","LatinName","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
       names(lfrqDataList)[[j]] <- paste(cruiseCodeSeries$fldCruiseName[j], cruiseCodeSeries$fldSeriesName[j], sep = " ")
 
       if(cruiseTable$fldCruiseClosed[cruiseTable$fldCruiseName == cruiseCodeSeries$fldCruiseName[j] & cruiseTable$fldSeriesName == cruiseCodeSeries$fldSeriesName[j]] == "N") {
@@ -125,7 +125,7 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     }
     lfrqDataTab <- ldply(lfrqDataTab, data.frame, row.names = NULL)
     names(lfrqDataTab)[(lastcol+2):(lastcol+3)] <- c("CruiseName", "SeriesName")
-    lfrqDataTab <- lfrqDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","Species","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
+    lfrqDataTab <- lfrqDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","Species","LatinName","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
     rm(j)
   }
 
