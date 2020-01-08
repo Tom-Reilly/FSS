@@ -14,7 +14,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   # Set up the part of the SQL query that deals with the species portion of the query
   if(missing(species)) {speciesQuery <- "'"
   } else {                     
-    speciesQuery <- paste("' AND fldMainSpeciesCode IN ('", paste(species, collapse = "','"), "')", sep = "")
+    speciesQuery <- paste("' AND dbo.tblDataBiologicalSamples.fldMainSpeciesCode IN ('", paste(species, collapse = "','"), "')", sep = "")
   }
   
   # Set up the main part of the biological SQL query
@@ -23,7 +23,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   fldCruiseName AS CruiseName,
   fldCruiseStationNumber AS Haul,
   fldGearCode AS GearCode,
-	fldMainSpeciesCode AS Species, 
+	dbo.tblDataBiologicalSamples.fldMainSpeciesCode AS Species, 
 	dbo.tblReferenceMainSpecies.fldScientificName AS LatinName,
   fldInternalBiologicalSampleID AS SampleID,
 	fldFishSex AS Sex,
