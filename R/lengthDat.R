@@ -24,12 +24,14 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   fldCruiseStationNumber AS Haul,
 	fldGearCode AS GearCode,
 	fldMainSpeciesCode AS Species,
+	dbo.tblReferenceMainSpecies.fldScientificName AS LatinName,
 	fldSex AS Sex,
 	fldLengthGroup AS Length,
   SUM(fldMeasuredNumberAtLength) AS MeasuredNumber,
   fldLengthGroupRaisingFactor AS RaisingFactor,
 	SUM(fldCategoryRaisedNumberAtLength) AS RaisedNumber
 	 FROM dbo.tblDataLengthSamples
+	 JOIN dbo.tblReferenceMainSpecies on dbo.tblDataLengthSamples.fldMainSpeciesCode = dbo.tblReferenceMainSpecies.fldMainSpeciesCode
 	 WHERE fldCruiseName", sep="")
 
   # Set up gear SQL query
