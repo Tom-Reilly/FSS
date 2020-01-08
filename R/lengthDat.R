@@ -12,9 +12,9 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   if(is.data.frame(cruiseCodeSeries)) {codeSwitch <- 1}
 
   # Set up the part of the SQL query that deals with the species portion of the query
-  if(missing(species)) {speciesQuery <- "' GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode, fldSex, fldLengthGroup, fldLengthGroupRaisingFactor"
+  if(missing(species)) {speciesQuery <- "' GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode, fldScientificName, fldSex, fldLengthGroup, fldLengthGroupRaisingFactor"
   } else {
-    speciesQuery <- paste("' AND dbo.tblDataLengthSamples.fldMainSpeciesCode IN ('", paste(species, collapse = "','"), "') GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode, fldSex, fldLengthGroup, fldLengthGroupRaisingFactor", sep = "")
+    speciesQuery <- paste("' AND dbo.tblDataLengthSamples.fldMainSpeciesCode IN ('", paste(species, collapse = "','"), "') GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode, fldScientificName, fldSex, fldLengthGroup, fldLengthGroupRaisingFactor", sep = "")
   }
 
   # Set up the main part of the length frequency SQL query
