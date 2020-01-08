@@ -65,7 +65,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     rm(g)
     
     bioData <- merge(bioData, gearCodes, by.x = "GearCode", by.y = "GearCode")
-    bioData <- bioData[,c("CruiseName","Haul","GearCode","GearName","SampleID","Species","Length","WholeWeight",
+    bioData <- bioData[,c("CruiseName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
                           "GuttedWeight","Sex","Maturity","Age")]
     
     if(cruiseTable$fldCruiseClosed[cruiseTable$fldCruiseName == cruiseCode & cruiseTable$fldSeriesName == cruiseSeries] == "N") {
@@ -100,7 +100,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
       }
       rm(g)
       bioDataList[[j]] <- merge(bioDataTemp, gearCodes, by.x = "GearCode", by.y = "GearCode")
-      bioDataList[[j]] <- bioDataList[[j]][c("CruiseName","Haul","GearCode","GearName","SampleID","Species","Length","WholeWeight",
+      bioDataList[[j]] <- bioDataList[[j]][c("CruiseName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
                                              "GuttedWeight","Sex","Maturity","Age")]
       names(bioDataList)[[j]] <- paste(cruiseCodeSeries$fldCruiseName[j], cruiseCodeSeries$fldSeriesName[j], sep = " ")
       
@@ -131,7 +131,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     }
     bioDataTab <- ldply(bioDataTab, data.frame, row.names = NULL)
     names(bioDataTab)[(lastcol+2):(lastcol+3)] <- c("CruiseName", "SeriesName")
-    bioDataTab <- bioDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","SampleID","Species","Length","WholeWeight",
+    bioDataTab <- bioDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
                                 "GuttedWeight","Sex","Maturity","Age")]
     rm(j)
   }
