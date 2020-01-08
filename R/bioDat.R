@@ -24,6 +24,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   fldCruiseStationNumber AS Haul,
   fldGearCode AS GearCode,
 	fldMainSpeciesCode AS Species, 
+	dbo.tblReferenceMainSpecies.fldScientificName AS LatinName,
   fldInternalBiologicalSampleID AS SampleID,
 	fldFishSex AS Sex,
 	fldFishLength/10 AS Length,
@@ -31,7 +32,8 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   fldLinkSampleID AS GuttedWeight,
   fldFishMaturity AS Maturity,
   fldResult1 AS Age
-	 FROM dbo.tblDataBiologicalSamples  
+	 FROM dbo.tblDataBiologicalSamples
+	 JOIN dbo.tblReferenceMainSpecies on dbo.tblDataBiologicalSamples.fldMainSpeciesCode = dbo.tblReferenceMainSpecies.fldMainSpeciesCode
 	 WHERE fldCruiseName", sep="")
   
   # Set up gear SQL query
