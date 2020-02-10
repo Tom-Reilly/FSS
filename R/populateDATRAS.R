@@ -266,8 +266,11 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           hlline <- paste(hlline, AphiaID, sep = ",") #F13 - Spcode
           hlline <- paste(hlline, 1, sep = ",") #F14 - SpecVal
 
+          # 10/02/2020 added stipulation to change berried B to female F
           if(length_data$Sex[s] == 'U') {
             sx <- -9
+          } else if(length_data$Sex[s] == 'B') {
+            sx <- 'F'
           } else {
             sx <- length_data$Sex[s]
           }
@@ -303,7 +306,14 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           hlline <- paste(hlline, round(length_data$Measured[s], digits = 0), sep = ",") #F24 - Number measured at length
           
-          hlline <- paste(hlline, -9, sep = ",") #F25 - DevStage (Development or maturity stage defined by non-invasive obs)
+          # code added to populate new devstage field
+          if(length_data$Sex[s] == 'B') {
+            dev <- 'B'
+          } else {
+            dev <- -9
+          }
+          
+          hlline <- paste(hlline, dev, sep = ",") #F25 - DevStage (Development or maturity stage defined by non-invasive obs)
 
           hlline <- paste(hlline, -9, sep = ",") #F26 LenMeasType (Type of length measurement)
 
