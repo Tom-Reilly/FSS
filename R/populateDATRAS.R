@@ -204,17 +204,17 @@ populateHH <- function(cruiseInfo, myVessel, chronData, file) {
     
       hhline <- paste(hhline, -9, sep = ",") #F60 - CodendMesh (codend mesh size in mm)
     
-      hhline <- paste(hhline, -9, sep = ",") #F61 - PelSampType (pelagic trawl sampling type)
+      hhline <- paste(hhline, -9, sep = ",") #F61 - SecchiDepth (secchi depth in metres)
     
-      hhline <- paste(hhline, -9, sep = ",") #F62 - MinTrawlDepth (highest point of the pelagic trawling)
-      hhline <- paste(hhline, -9, sep = ",") #F63 - MaxTrawlDepth (lowest point of the pelagic trawling)
+      hhline <- paste(hhline, -9, sep = ",") #F62 - Turbidity (turbidity in NTU)
     
-      hhline <- paste(hhline, -9, sep = ",") #F64 - SecchiDepth (secchi depth in metres)
+      hhline <- paste(hhline, -9, sep = ",") #F63 - TidePhase (tidal phase in minutes before the next high tide)
+      hhline <- paste(hhline, -9, sep = ",") #F64 - TideSpeed (Speed of tide in m/s)
     
-      hhline <- paste(hhline, -9, sep = ",") #F65 - Turbidity (turbidity in NTU)
+      hhline <- paste(hhline, -9, sep = ",") #F65 - PelSampType (pelagic trawl sampling type)
     
-      hhline <- paste(hhline, -9, sep = ",") #F66 - TidePhase (tidal phase in minutes before the next high tide)
-      hhline <- paste(hhline, -9, sep = ",") #F67 - TideSpeed (Speed of tide in m/s)
+      hhline <- paste(hhline, -9, sep = ",") #F66 - MinTrawlDepth (highest point of the pelagic trawling)
+      hhline <- paste(hhline, -9, sep = ",") #F67 - MaxTrawlDepth (lowest point of the pelagic trawling)
 
       cat(hhline, file = file, sep = "\n", append = TRUE)
       rm(hhline)
