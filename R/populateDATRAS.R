@@ -531,16 +531,34 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
       if(is.na(ca_data$Weight[b])) {wgt <- -9 } else {wgt <- format(round(ca_data$Weight[b], 1), nsmall = 1)}
 
       caline <- paste(caline, wgt, sep = ",") #CAF23 - Weight
+      
+      # if maturity information is present then report the matuirty scale used
+      if(mat != -9) {
+        matscale <- 'M6'
+      } else {
+        matscale <- -9
+      }
           
-      caline <- paste(caline, -9, sep = ",") #CAF24 - FishID
+      caline <- paste(caline, matscale, sep = ",") #CAF24 - MaturityScale
           
-      caline <- paste(caline, -9, sep = ",") #CAF24 - GenSamp
+      caline <- paste(caline, -9, sep = ",") #CAF25 - FishID
           
-      caline <- paste(caline, -9, sep = ",") #CAF24 - StomSamp
+      caline <- paste(caline, -9, sep = ",") #CAF26 - GenSamp
           
-      caline <- paste(caline, -9, sep = ",") #CAF24 - AgeSource
-      caline <- paste(caline, -9, sep = ",") #CAF24 - AgePrepMet
-      caline <- paste(caline, -9, sep = ",") #CAF24 - OtGrading
+      caline <- paste(caline, -9, sep = ",") #CAF27 - StomSamp
+          
+      # if age information is present then report the age source used
+      if(age != -9) {
+        agesrc <- 'OT'
+      } else {
+        agesrc <- -9
+      }
+          
+      caline <- paste(caline, agesrc, sep = ",") #CAF28 - AgeSource
+      caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
+      caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
+          
+      caline <- paste(caline, -9, sep = ",") #CAF31 - ParSamp
 
       cat(caline, file = file, sep = "\n", append = TRUE)
       rm(caline)
@@ -628,7 +646,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
       caline <- paste(caline, wgt, sep = ",") #CAF23 - Weight
 
-            caline <- paste(caline, -9, sep = ",") #CAF24 - FishID
+         caline <- paste(caline, -9, sep = ",") #CAF24 - FishID
           
       caline <- paste(caline, -9, sep = ",") #CAF24 - GenSamp
           
