@@ -425,7 +425,7 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
 }
 
 populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, file) {
-print(caCore_qry(cruiseCode))
+
   ca_data <- sqlQuery(channel, caCore_qry(cruiseCode))
 
   for (b in 1:nrow(ca_data)) {
@@ -573,7 +573,7 @@ print(caCore_qry(cruiseCode))
 
 
 populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, file) {
-print(caNonCore_qry(cruiseCode))
+
   ca_data <- sqlQuery(channel, caNonCore_qry(cruiseCode))
 
   for (b in 1:nrow(ca_data)) {
