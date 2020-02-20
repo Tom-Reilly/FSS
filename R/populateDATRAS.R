@@ -647,11 +647,11 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
       caline <- paste(caline, wgt, sep = ",") #CAF23 - Weight
       
       # if maturity information is present then report the maturity scale used
-      if(mat != -9) {
-        matscale <- 'M6'
-      } else {
+      #if(mat != -9) {
+      #  matscale <- 'M6'
+      #} else {
         matscale <- -9
-      }
+      #}
           
       caline <- paste(caline, matscale, sep = ",") #CAF24 - MaturityScale
 
