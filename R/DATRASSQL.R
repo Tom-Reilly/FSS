@@ -129,7 +129,7 @@ caNonCore_qry <- function(cruiseCode) {
 		AVG(a.fldFishWholeWeight) AS Weight,
     		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
 		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
-  		WHERE fldCruiseName='", cruiseCode, "' AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") # removed  AND fldResult1 is not null
+  		WHERE a.fldCruiseName='", cruiseCode, "' AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") # removed  AND fldResult1 is not null
   
   ca_sql <- gsub('\n','',ca_sql)	
   caNonCore_qry <- gsub('\t','',ca_sql)  
