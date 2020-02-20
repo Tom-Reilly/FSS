@@ -108,10 +108,8 @@ caCore_qry <- function(cruiseCode) {
 		a.fldResult1 AS Age,
 		AVG(a.fldFishWholeWeight) AS Weight,
     		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
-		FROM dbo.tblDataBiologicalSamples a
-		INNER JOIN dbo.tblDataGearDeployments b
-	 	ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
-  		  WHERE a.fldCruiseName='", cruiseCode, "' AND a.fldResult1 is not null AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") 
+		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
+  		WHERE a.fldCruiseName='", cruiseCode, "' AND a.fldResult1 is not null AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") 
   ca_sql <- gsub('\n','',ca_sql)	
   caCore_qry <- gsub('\t','',ca_sql)  
   
@@ -130,10 +128,8 @@ caNonCore_qry <- function(cruiseCode) {
 		a.fldResult1 AS Age,
 		AVG(a.fldFishWholeWeight) AS Weight,
     		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
-		FROM dbo.tblDataBiologicalSamples a
-		INNER JOIN dbo.tblDataGearDeployments b
-	 	ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
-  		  WHERE fldCruiseName='", cruiseCode, "' AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") # removed  AND fldResult1 is not null
+		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
+  		WHERE fldCruiseName='", cruiseCode, "' AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") # removed  AND fldResult1 is not null
   
   ca_sql <- gsub('\n','',ca_sql)	
   caNonCore_qry <- gsub('\t','',ca_sql)  
