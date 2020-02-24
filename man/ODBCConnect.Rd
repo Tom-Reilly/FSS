@@ -8,20 +8,23 @@ Create Connection to FSS
 Create an Online Database Connection (ODBC) to the Fisheries Survey System (FSS) Database. It is necessary to run this function prior to any further attempts to query the FSS database.
 }
 \usage{
-ODBCConnect(name, location)
+ODBCConnect(name, user, password)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{name}{
 character, the name of the database, in this case "FSS".
 }
-  \item{location}{
-character, the location you are connecting from, either "OSE" or "Scotia".
+  \item{user}{
+character, the user name defined when setting up the DSN, this will differ between location, OSE or Scotia.
 }
+  \item{password}{
+    character, the passord defined when setting up the DSN, this will differ between location, OSE or Scotia.
+    }
 }
 \examples{
 # Connect to FSS from the OSE
-ODBCConnect("FSS","OSE")
+ODBCConnect(name = "FSS", user = "FSSuser", password = "pwd")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
