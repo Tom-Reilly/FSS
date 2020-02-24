@@ -1,14 +1,11 @@
-ODBCConnect <- function(name, location) {  
+ODBCConnect <- function(name, user, password) {  
 
   cat("Connecting to the FSS Database")
 
   cat("\n----------------------------------------------------------------------------\n")
-  
-  if(location == "OSE") {password <- "mssfss"}
-  if(location == "Scotia") {password <- "scotia"}
 
   # Set up the connection to the FSS database
-  channel <- odbcConnect(name, uid = "rofss", pwd = password,  readOnly = TRUE)
+  channel <- odbcConnect(name, uid = user, pwd = password,  readOnly = TRUE)
 
   if(is(channel,"RODBC")) {cat("Connection with FSS Database established")
   } else {
