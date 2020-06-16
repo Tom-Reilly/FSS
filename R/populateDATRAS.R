@@ -201,6 +201,20 @@ populateHH <- function(cruiseInfo, myVessel, chronData, file) {
 
       hhline <- paste(hhline, -9, sep = ",") #F58 - Thermocline (NOT RECORDED)
       hhline <- paste(hhline, -9, sep = ",") #F59 - Thermocline Depth (NOT RECORDED)
+    
+      hhline <- paste(hhline, -9, sep = ",") #F60 - CodendMesh (codend mesh size in mm)
+    
+      hhline <- paste(hhline, -9, sep = ",") #F61 - SecchiDepth (secchi depth in metres)
+    
+      hhline <- paste(hhline, -9, sep = ",") #F62 - Turbidity (turbidity in NTU)
+    
+      hhline <- paste(hhline, -9, sep = ",") #F63 - TidePhase (tidal phase in minutes before the next high tide)
+      hhline <- paste(hhline, -9, sep = ",") #F64 - TideSpeed (Speed of tide in m/s)
+    
+      hhline <- paste(hhline, -9, sep = ",") #F65 - PelSampType (pelagic trawl sampling type)
+    
+      hhline <- paste(hhline, -9, sep = ",") #F66 - MinTrawlDepth (highest point of the pelagic trawling)
+      hhline <- paste(hhline, -9, sep = ",") #F67 - MaxTrawlDepth (lowest point of the pelagic trawling)
 
       cat(hhline, file = file, sep = "\n", append = TRUE)
       rm(hhline)
@@ -252,8 +266,11 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           hlline <- paste(hlline, AphiaID, sep = ",") #F13 - Spcode
           hlline <- paste(hlline, 1, sep = ",") #F14 - SpecVal
 
+          # 10/02/2020 added stipulation to change berried B to female F
           if(length_data$Sex[s] == 'U') {
             sx <- -9
+          } else if(length_data$Sex[s] == 'B') {
+            sx <- 'F'
           } else {
             sx <- length_data$Sex[s]
           }
@@ -285,9 +302,20 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           hlline <- paste(hlline, ".", sep = ",") #F22 - Length class code
 
-          hlline <- paste(hlline, length_data$Length[s], sep = ",") #F23 - Catch Weight
+          hlline <- paste(hlline, length_data$Length[s], sep = ",") #F23 - Length class
 
           hlline <- paste(hlline, round(length_data$Measured[s], digits = 0), sep = ",") #F24 - Number measured at length
+          
+          # code added to populate new devstage field
+          if(length_data$Sex[s] == 'B') {
+            dev <- 'B'
+          } else {
+            dev <- -9
+          }
+          
+          hlline <- paste(hlline, dev, sep = ",") #F25 - DevStage (Development or maturity stage defined by non-invasive obs)
+
+          hlline <- paste(hlline, -9, sep = ",") #F26 LenMeasType (Type of length measurement)
 
           cat(hlline, file = file, sep = "\n", append = TRUE)
           rm(hlline)
@@ -341,8 +369,11 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
 
           hlline <- paste(hlline, 4, sep = ",") #F14 - SpecVal
 
+          # 10/02/2020 added stipulation to change berried B to female F
           if(NotMeasuredSp$Sex[s] == 'U') {
             sx <- -9
+          } else if(NotMeasuredSp$Sex[s] == 'B') {
+            sx <- 'F'
           } else {
             sx <- NotMeasuredSp$Sex[s]
           }
@@ -368,6 +399,17 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
           hlline <- paste(hlline, -9 ,sep = ",") #F23 - Length class
 
           hlline <- paste(hlline, -9, sep = ",") #F24 - Number measured at length
+          
+          # code added to populate new devstage field
+          if(NotMeasuredSp$Sex[s] == 'B') {
+            dev <- 'B'
+          } else {
+            dev <- -9
+          }
+          
+          hlline <- paste(hlline, dev, sep = ",") #F25 - DevStage (Development or maturity stage defined by non-invasive obs)
+
+          hlline <- paste(hlline, -9, sep = ",") #F26 LenMeasType (Type of length measurement)
 
           cat(hlline, file = file, sep = "\n", append = TRUE)
           rm(hlline)
@@ -392,46 +434,46 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
       ca_gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", ca_data$GearCode[b], sep = "")
       ca_gear_detail <- sqlQuery(channel, ca_gear_qry)
 
-      caline <- paste("CA", sep = ",") #CAF1: RecordType
-      caline <- paste(caline, cruiseInfo[["SurveyQuarter"]], sep = ",") #CAF2: Quarter
-      caline <- paste(caline, "SCO", sep = ",") #CAF3: Country
-      caline <- paste(caline, myVessel, sep = ",") #CAF4: Ship
-      caline <- paste(caline, ca_gear_detail$fldDATRASCode[1], sep = ",") #CAF5: Gear
-      caline <- paste(caline, ca_gear_detail$fldDATRASSweepLength[1], sep = ",") #CAF6: Sweep length
-      caline <- paste(caline, ca_gear_detail$fldDATRASGearException[1], sep = ",") #CAF7: GearExp
-      caline <- paste(caline, ca_gear_detail$fldDATRASDoorType[1], sep = ",") #CAF8: DorrType
-      caline <- paste(caline, ca_data$Haul[b], sep = ",") #CAF9: StNo
-      caline <- paste(caline, ca_data$Haul[b], sep = ",") #CAF10: Haul
-      caline <- paste(caline, ca_info[ca_info[, 1] == ca_data$Haul[b], 2], sep = ",") #CAF11 Year
-      caline <- paste(caline, "W", sep = ",") #CAF12 Species Code Type
+      caline <- paste("CA", sep = ",") #CAF1 - RecordType
+      caline <- paste(caline, cruiseInfo[["SurveyQuarter"]], sep = ",") #CAF2 - Quarter
+      caline <- paste(caline, "SCO", sep = ",") #CAF3 - Country
+      caline <- paste(caline, myVessel, sep = ",") #CAF4 - Ship
+      caline <- paste(caline, ca_gear_detail$fldDATRASCode[1], sep = ",") #CAF5 - Gear
+      caline <- paste(caline, ca_gear_detail$fldDATRASSweepLength[1], sep = ",") #CAF6 - Sweep length
+      caline <- paste(caline, ca_gear_detail$fldDATRASGearException[1], sep = ",") #CAF7 - GearExp
+      caline <- paste(caline, ca_gear_detail$fldDATRASDoorType[1], sep = ",") #CAF8 - DoorType
+      caline <- paste(caline, ca_data$Haul[b], sep = ",") #CAF9 - StNo
+      caline <- paste(caline, ca_data$Haul[b], sep = ",") #CAF10 - Haul
+      caline <- paste(caline, ca_info[ca_info[, 1] == ca_data$Haul[b], 2], sep = ",") #CAF11 - Year
+      caline <- paste(caline, "W", sep = ",") #CAF12 - Species Code Type
 
       aphia_sql = paste("SELECT TOP 1  fldAlternateSpeciesCode FROM dbo.tblReferenceMainSpecies WHERE fldMainSpeciesCode='", ca_data$SpCode[b], "'", sep = "")
       aphia_data <- sqlQuery(channel, aphia_sql)
       ####  sp <- ca_data$SpCode[b]
       aph <- aphia_data[1, 1]
 
-      caline <- paste(caline, aph, sep = ",") #CAF13 Species Code
+      caline <- paste(caline, aph, sep = ",") #CAF13 - Species Code
 
-      caline <- paste(caline, cruiseInfo[["SurveyAreaType"]], sep = ",") #CAF14 Area Code Type (updated)
+      caline <- paste(caline, cruiseInfo[["SurveyAreaType"]], sep = ",") #CAF14 - Area Code Type (updated)
 
-      if (cruiseInfo[["SurveyAreaType"]] == 0) {
-        stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
-        statsq <- sqlQuery(channel, stat_sql)
-        AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
-      } else {
-        acode_sql <- paste("SELECT TOP 1 fldStratum FROM dbo.tblDataStationLogs WHERE fldCruiseName='", cruiseCode,"' AND fldCruiseStationNumber=", ca_data$Haul[b], sep = "")
-        acode <- sqlQuery(channel, acode_sql)
-        AreaCode <- acode[, 1]
-      }
+      #if (cruiseInfo[["SurveyAreaType"]] == 0) {
+      #  stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
+      #  statsq <- sqlQuery(channel, stat_sql)
+      #  AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
+      #} else {
+      #  acode_sql <- paste("SELECT TOP 1 fldStratum FROM dbo.tblDataStationLogs WHERE fldCruiseName='", cruiseCode,"' AND fldCruiseStationNumber=", ca_data$Haul[b], sep = "")
+      #  acode <- sqlQuery(channel, acode_sql)
+      #  AreaCode <- acode[, 1]
+      #}
 
-      #stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
-      #statsq <- sqlQuery(channel, stat_sql)
-      #AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
+      stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
+      statsq <- sqlQuery(channel, stat_sql)
+      AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
 
-      caline <- paste(caline, AreaCode , sep = ",") #CAF15: AreaCode
+      caline <- paste(caline, AreaCode , sep = ",") #CAF15 - AreaCode
 
-      caline <- paste(caline, ".", sep = ",") #CAF16 LengthCode Type
-      caline <- paste(caline, ca_data$Lngth[b], sep = ",") #CAF17 Length class
+      caline <- paste(caline, ".", sep = ",") #CAF16 - LengthCode Type
+      caline <- paste(caline, ca_data$Lngth[b], sep = ",") #CAF17 - Length class
 
       if(ca_data$Sex[b] == 'U') {
         sx = -9
@@ -439,7 +481,7 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
         sx = ca_data$Sex[b]
       }
 
-      caline <- paste(caline, sx, sep = ",") #CAF18 Sex
+      caline <- paste(caline, sx, sep = ",") #CAF18 - Sex
 
       if(is.na(ca_data$Maturity[b])) {
         mat = -9
@@ -476,19 +518,47 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
         }
       }
 
-      caline <- paste(caline, mat, sep = ",") #CAF19 Maturity
+      caline <- paste(caline, mat, sep = ",") #CAF19 - Maturity
 
-      caline <- paste(caline, -9, sep = ",") #CAF20 Plus group
+      caline <- paste(caline, -9, sep = ",") #CAF20 - Plus group
 
       if(is.na(ca_data$Age[b])) {age <- -9 } else {age <- ca_data$Age[b]}
 
-      caline <- paste(caline, age, sep = ",") #CAF21 Age rings
+      caline <- paste(caline, age, sep = ",") #CAF21 - Age rings
 
-      caline <- paste(caline, ca_data$CaNoAtLen[b], sep = ",") #CAF22 CANoatlegth
+      caline <- paste(caline, ca_data$CaNoAtLen[b], sep = ",") #CAF22 - CANoatlegth
 
       if(is.na(ca_data$Weight[b])) {wgt <- -9 } else {wgt <- format(round(ca_data$Weight[b], 1), nsmall = 1)}
 
-      caline <- paste(caline, wgt, sep = ",") #CAF23 Weight
+      caline <- paste(caline, wgt, sep = ",") #CAF23 - Weight
+      
+      # if maturity information is present then report the maturity scale used
+      if(mat != -9) {
+        matscale <- 'M6'
+      } else {
+        matscale <- -9
+      }
+          
+      caline <- paste(caline, matscale, sep = ",") #CAF24 - MaturityScale
+          
+      caline <- paste(caline, -9, sep = ",") #CAF25 - FishID
+          
+      caline <- paste(caline, -9, sep = ",") #CAF26 - GenSamp
+          
+      caline <- paste(caline, -9, sep = ",") #CAF27 - StomSamp
+          
+      # if age information is present then report the age source used
+      if(age != -9) {
+        agesrc <- 'OT'
+      } else {
+        agesrc <- -9
+      }
+          
+      caline <- paste(caline, agesrc, sep = ",") #CAF28 - AgeSource
+      caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
+      caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
+          
+      caline <- paste(caline, -9, sep = ",") #CAF31 - ParSamp
 
       cat(caline, file = file, sep = "\n", append = TRUE)
       rm(caline)
@@ -513,46 +583,46 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
       ca_gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", ca_data$GearCode[b], sep = "")
       ca_gear_detail <- sqlQuery(channel, ca_gear_qry)
 
-      caline <- paste("CA", sep = ",") #CAF1: RecordType
-      caline <- paste(caline, cruiseInfo[["SurveyQuarter"]], sep = ",") #CAF2: Quarter
-      caline <- paste(caline, "SCO", sep = ",") #CAF3: Country
-      caline <- paste(caline, myVessel, sep = ",") #CAF4: Ship
-      caline <- paste(caline, ca_gear_detail$fldDATRASCode[1], sep = ",") #CAF5: Gear
-      caline <- paste(caline, ca_gear_detail$fldDATRASSweepLength[1], sep = ",") #CAF6: Sweep length
-      caline <- paste(caline, ca_gear_detail$fldDATRASGearException[1], sep = ",") #CAF7: GearExp
-      caline <- paste(caline, ca_gear_detail$fldDATRASDoorType[1], sep = ",") #CAF8: DorrType
-      caline <- paste(caline, ca_data$Haul[b], sep = ",") #CAF9: StNo
-      caline <- paste(caline, ca_data$Haul[b], sep = ",") #CAF10: Haul
-      caline <- paste(caline, ca_info[ca_info[, 1] == ca_data$Haul[b], 2], sep = ",") #CAF11 Year
-      caline <- paste(caline, "W", sep = ",") #CAF12 Species Code Type
+      caline <- paste("CA", sep = ",") #CAF1 - RecordType
+      caline <- paste(caline, cruiseInfo[["SurveyQuarter"]], sep = ",") #CAF2 - Quarter
+      caline <- paste(caline, "SCO", sep = ",") #CAF3 - Country
+      caline <- paste(caline, myVessel, sep = ",") #CAF4 - Ship
+      caline <- paste(caline, ca_gear_detail$fldDATRASCode[1], sep = ",") #CAF5 - Gear
+      caline <- paste(caline, ca_gear_detail$fldDATRASSweepLength[1], sep = ",") #CAF6 - Sweep length
+      caline <- paste(caline, ca_gear_detail$fldDATRASGearException[1], sep = ",") #CAF7 - GearExp
+      caline <- paste(caline, ca_gear_detail$fldDATRASDoorType[1], sep = ",") #CAF8 - DorrType
+      caline <- paste(caline, ca_data$Haul[b], sep = ",") #CAF9 - StNo
+      caline <- paste(caline, ca_data$Haul[b], sep = ",") #CAF10 - Haul
+      caline <- paste(caline, ca_info[ca_info[, 1] == ca_data$Haul[b], 2], sep = ",") #CAF11 - Year
+      caline <- paste(caline, "W", sep = ",") #CAF12 - Species Code Type
 
       aphia_sql = paste("SELECT TOP 1  fldAlternateSpeciesCode FROM dbo.tblReferenceMainSpecies WHERE fldMainSpeciesCode='", ca_data$SpCode[b], "'", sep = "")
       aphia_data <- sqlQuery(channel, aphia_sql)
     ####  sp <- ca_data$SpCode[b]
       aph <- aphia_data[1, 1]
 
-      caline <- paste(caline, aph, sep = ",") #CAF13 Species Code
+      caline <- paste(caline, aph, sep = ",") #CAF13 - Species Code
 
-      caline <- paste(caline, cruiseInfo[["SurveyAreaType"]], sep = ",") #CAF14 Area Code Type (updated)
+      caline <- paste(caline, cruiseInfo[["SurveyAreaType"]], sep = ",") #CAF14 - Area Code Type (updated)
 
-      if (cruiseInfo[["SurveyAreaType"]] == 0) {
-        stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
-        statsq <- sqlQuery(channel, stat_sql)
-        AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
-      } else {
-        acode_sql <- paste("SELECT TOP 1 fldStratum FROM dbo.tblDataStationLogs WHERE fldCruiseName='", cruiseCode,"' AND fldCruiseStationNumber=", ca_data$Haul[b], sep = "")
-        acode <- sqlQuery(channel, acode_sql)
-        AreaCode <- acode[, 1]
-      }
+      #if (cruiseInfo[["SurveyAreaType"]] == 0) {
+      #  stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
+      #  statsq <- sqlQuery(channel, stat_sql)
+      #  AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
+      #} else {
+      #  acode_sql <- paste("SELECT TOP 1 fldStratum FROM dbo.tblDataStationLogs WHERE fldCruiseName='", cruiseCode,"' AND fldCruiseStationNumber=", ca_data$Haul[b], sep = "")
+      #  acode <- sqlQuery(channel, acode_sql)
+      #  AreaCode <- acode[, 1]
+      #}
 
-      #stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
-      #statsq <- sqlQuery(channel, stat_sql)
-      #AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
+      stat_sql <- paste("SELECT TOP 1 LEFT(fldICESRectangle,2) AS P1, RIGHT(fldICESRectangle,2) AS P2 FROM tblDataStationLogs WHERE fldCruiseStationNumber=", ca_data$Haul[b], " AND fldCruiseName='", cruiseCode, "'", sep = "")
+      statsq <- sqlQuery(channel, stat_sql)
+      AreaCode <- paste(statsq[1, 1], statsq[1, 2], sep = "")
 
-      caline <- paste(caline, AreaCode , sep = ",") #CAF15: AreaCode
+      caline <- paste(caline, AreaCode , sep = ",") #CAF15 - AreaCode
 
-      caline <- paste(caline, ".", sep = ",") #CAF16 LengthCode Type
-      caline <- paste(caline, ca_data$Lngth[b], sep = ",") #CAF17 Length class
+      caline <- paste(caline, ".", sep = ",") #CAF16 - LengthCode Type
+      caline <- paste(caline, ca_data$Lngth[b], sep = ",") #CAF17 - Length class
 
       if(ca_data$Sex[b] == 'U') {
         sx = -9
@@ -560,22 +630,50 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
         sx = ca_data$Sex[b]
       }
 
-      caline <- paste(caline, sx, sep = ",") #CAF18 Sex
+      caline <- paste(caline, sx, sep = ",") #CAF18 - Sex
 
-      caline <- paste(caline, "-9", sep = ",") #CAF19 Maturity  ### Do not include maturity for non-core species
+      caline <- paste(caline, "-9", sep = ",") #CAF19 - Maturity  ### Do not include maturity for non-core species
 
-      caline <- paste(caline, -9, sep = ",") #CAF20 Plus group
+      caline <- paste(caline, -9, sep = ",") #CAF20 - Plus group
 
       if(is.na(ca_data$Age[b])) {age <- -9 } else {age <- ca_data$Age[b]}
 
-      caline <- paste(caline, age, sep = ",") #CAF21 Age rings
+      caline <- paste(caline, age, sep = ",") #CAF21 - Age rings
 
-      caline <- paste(caline, ca_data$CaNoAtLen[b], sep = ",") #CAF22 CANoatlegth
+      caline <- paste(caline, ca_data$CaNoAtLen[b], sep = ",") #CAF22 - CANoatlegth
 
       if(is.na(ca_data$Weight[b])) {wgt <- -9 } else {wgt <- format(round(ca_data$Weight[b], 1), nsmall = 1)}
 
-      caline <- paste(caline, wgt, sep = ",") #CAF23 Weight
+      caline <- paste(caline, wgt, sep = ",") #CAF23 - Weight
+      
+      # if maturity information is present then report the maturity scale used
+      #if(mat != -9) {
+      #  matscale <- 'M6'
+      #} else {
+        matscale <- -9
+      #}
+          
+      caline <- paste(caline, matscale, sep = ",") #CAF24 - MaturityScale
 
+      caline <- paste(caline, -9, sep = ",") #CAF25 - FishID
+          
+      caline <- paste(caline, -9, sep = ",") #CAF26 - GenSamp
+          
+      caline <- paste(caline, -9, sep = ",") #CAF27 - StomSamp
+          
+      # if age information is present then report the age source used
+      if(age != -9) {
+        agesrc <- 'OT'
+      } else {
+        agesrc <- -9
+      }
+          
+      caline <- paste(caline, agesrc, sep = ",") #CAF28 - AgeSource
+      caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
+      caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
+      
+      caline <- paste(caline, -9, sep = ",") #CAF31 - ParSamp
+      
       cat(caline, file = file, sep = "\n", append = TRUE)
       rm(caline)
 
@@ -585,4 +683,4 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 }
 
-# 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously startum or stat sq if no stratum available)
+# 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)

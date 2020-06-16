@@ -14,7 +14,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   # Set up the part of the SQL query that deals with the species portion of the query
   if(missing(species)) {speciesQuery <- "'"
   } else {                     
-    speciesQuery <- paste("' AND fldMainSpeciesCode IN ('", paste(species, collapse = "','"), "')", sep = "")
+    speciesQuery <- paste("' AND dbo.tblDataBiologicalSamples.fldMainSpeciesCode IN ('", paste(species, collapse = "','"), "')", sep = "")
   }
   
   # Set up the main part of the biological SQL query
@@ -23,7 +23,8 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   fldCruiseName AS CruiseName,
   fldCruiseStationNumber AS Haul,
   fldGearCode AS GearCode,
-	fldMainSpeciesCode AS Species, 
+	dbo.tblDataBiologicalSamples.fldMainSpeciesCode AS Species, 
+	dbo.tblReferenceMainSpecies.fldScientificName AS LatinName,
   fldInternalBiologicalSampleID AS SampleID,
 	fldFishSex AS Sex,
 	fldFishLength/10 AS Length,
@@ -31,7 +32,8 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   fldLinkSampleID AS GuttedWeight,
   fldFishMaturity AS Maturity,
   fldResult1 AS Age
-	 FROM dbo.tblDataBiologicalSamples  
+	 FROM dbo.tblDataBiologicalSamples
+	 JOIN dbo.tblReferenceMainSpecies on dbo.tblDataBiologicalSamples.fldMainSpeciesCode = dbo.tblReferenceMainSpecies.fldMainSpeciesCode
 	 WHERE fldCruiseName", sep="")
   
   # Set up gear SQL query
@@ -63,7 +65,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     rm(g)
     
     bioData <- merge(bioData, gearCodes, by.x = "GearCode", by.y = "GearCode")
-    bioData <- bioData[,c("CruiseName","Haul","GearCode","GearName","SampleID","Species","Length","WholeWeight",
+    bioData <- bioData[,c("CruiseName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
                           "GuttedWeight","Sex","Maturity","Age")]
     
     if(cruiseTable$fldCruiseClosed[cruiseTable$fldCruiseName == cruiseCode & cruiseTable$fldSeriesName == cruiseSeries] == "N") {
@@ -98,7 +100,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
       }
       rm(g)
       bioDataList[[j]] <- merge(bioDataTemp, gearCodes, by.x = "GearCode", by.y = "GearCode")
-      bioDataList[[j]] <- bioDataList[[j]][c("CruiseName","Haul","GearCode","GearName","SampleID","Species","Length","WholeWeight",
+      bioDataList[[j]] <- bioDataList[[j]][c("CruiseName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
                                              "GuttedWeight","Sex","Maturity","Age")]
       names(bioDataList)[[j]] <- paste(cruiseCodeSeries$fldCruiseName[j], cruiseCodeSeries$fldSeriesName[j], sep = " ")
       
@@ -129,7 +131,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     }
     bioDataTab <- ldply(bioDataTab, data.frame, row.names = NULL)
     names(bioDataTab)[(lastcol+2):(lastcol+3)] <- c("CruiseName", "SeriesName")
-    bioDataTab <- bioDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","SampleID","Species","Length","WholeWeight",
+    bioDataTab <- bioDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
                                 "GuttedWeight","Sex","Maturity","Age")]
     rm(j)
   }

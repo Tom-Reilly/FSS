@@ -12,9 +12,9 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   if(is.data.frame(cruiseCodeSeries)) {codeSwitch <- 1}
 
   # Set up the part of the SQL query that deals with the species portion of the query
-  if(missing(species)) {speciesQuery <- "' GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode, fldSex, fldLengthGroup, fldLengthGroupRaisingFactor"
+  if(missing(species)) {speciesQuery <- "' GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, dbo.tblDataLengthSamples.fldMainSpeciesCode, fldScientificName, fldSex, fldLengthGroup, fldLengthGroupRaisingFactor"
   } else {
-    speciesQuery <- paste("' AND fldMainSpeciesCode IN ('", paste(species, collapse = "','"), "') GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode, fldSex, fldLengthGroup, fldLengthGroupRaisingFactor", sep = "")
+    speciesQuery <- paste("' AND dbo.tblDataLengthSamples.fldMainSpeciesCode IN ('", paste(species, collapse = "','"), "') GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, dbo.tblDataLengthSamples.fldMainSpeciesCode, fldScientificName, fldSex, fldLengthGroup, fldLengthGroupRaisingFactor", sep = "")
   }
 
   # Set up the main part of the length frequency SQL query
@@ -23,13 +23,15 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   fldCruiseName AS CruiseName,
   fldCruiseStationNumber AS Haul,
 	fldGearCode AS GearCode,
-	fldMainSpeciesCode AS Species,
+	dbo.tblDataLengthSamples.fldMainSpeciesCode AS Species,
+	dbo.tblReferenceMainSpecies.fldScientificName AS LatinName,
 	fldSex AS Sex,
 	fldLengthGroup AS Length,
   SUM(fldMeasuredNumberAtLength) AS MeasuredNumber,
   fldLengthGroupRaisingFactor AS RaisingFactor,
 	SUM(fldCategoryRaisedNumberAtLength) AS RaisedNumber
 	 FROM dbo.tblDataLengthSamples
+	 JOIN dbo.tblReferenceMainSpecies on dbo.tblDataLengthSamples.fldMainSpeciesCode = dbo.tblReferenceMainSpecies.fldMainSpeciesCode
 	 WHERE fldCruiseName", sep="")
 
   # Set up gear SQL query
@@ -61,7 +63,7 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     rm(g)
 
     lfrqData <- merge(lfrqData, gearCodes, by.x = "GearCode", by.y = "GearCode")
-    lfrqData <- lfrqData[,c("CruiseName","Haul","GearCode","GearName","Species","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
+    lfrqData <- lfrqData[,c("CruiseName","Haul","GearCode","GearName","Species","LatinName","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
     lfrqData$RaisedNumber <- round(lfrqData$RaisedNumber)
 
     if(cruiseTable$fldCruiseClosed[cruiseTable$fldCruiseName == cruiseCode & cruiseTable$fldSeriesName == cruiseSeries] == "N") {
@@ -97,7 +99,7 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
       }
       rm(g)
       lfrqDataList[[j]] <- merge(lfrqDataTemp, gearCodes, by.x = "GearCode", by.y = "GearCode")
-      lfrqDataList[[j]] <- lfrqDataList[[j]][,c("CruiseName","Haul","GearCode","GearName","Species","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
+      lfrqDataList[[j]] <- lfrqDataList[[j]][,c("CruiseName","Haul","GearCode","GearName","Species","LatinName","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
       names(lfrqDataList)[[j]] <- paste(cruiseCodeSeries$fldCruiseName[j], cruiseCodeSeries$fldSeriesName[j], sep = " ")
 
       if(cruiseTable$fldCruiseClosed[cruiseTable$fldCruiseName == cruiseCodeSeries$fldCruiseName[j] & cruiseTable$fldSeriesName == cruiseCodeSeries$fldSeriesName[j]] == "N") {
@@ -123,7 +125,7 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     }
     lfrqDataTab <- ldply(lfrqDataTab, data.frame, row.names = NULL)
     names(lfrqDataTab)[(lastcol+2):(lastcol+3)] <- c("CruiseName", "SeriesName")
-    lfrqDataTab <- lfrqDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","Species","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
+    lfrqDataTab <- lfrqDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","Species","LatinName","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
     rm(j)
   }
 

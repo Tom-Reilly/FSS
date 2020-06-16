@@ -99,17 +99,17 @@ caCore_qry <- function(cruiseCode) {
   
   ca_sql <- paste("
 		SELECT 
-		fldCruiseStationNumber AS Haul,
-		fldGearCode AS GearCode,
-		fldMainSpeciesCode AS SpCode, 
-		fldFishLength AS Lngth,
-		fldFishSex as Sex, 
-    fldFishMaturity as Maturity,
-		fldResult1 AS Age,
-		AVG(fldFishWholeWeight) AS Weight,
-    COUNT(fldInternalBiologicalSampleID) AS CaNoAtLen  
-		FROM dbo.tblDataBiologicalSamples    
-  		  WHERE fldCruiseName='", cruiseCode, "' AND fldResult1 is not null GROUP BY fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode,  fldFishLength, fldFishSex, fldFishMaturity, fldResult1; ", sep = "") 
+		a.fldCruiseStationNumber AS Haul,
+		a.fldGearCode AS GearCode,
+		a.fldMainSpeciesCode AS SpCode, 
+		a.fldFishLength AS Lngth,
+		a.fldFishSex as Sex, 
+    		a.fldFishMaturity as Maturity,
+		a.fldResult1 AS Age,
+		AVG(a.fldFishWholeWeight) AS Weight,
+    		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
+		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
+  		WHERE a.fldCruiseName='", cruiseCode, "' AND a.fldResult1 is not null AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") 
   ca_sql <- gsub('\n','',ca_sql)	
   caCore_qry <- gsub('\t','',ca_sql)  
   
@@ -119,17 +119,17 @@ caNonCore_qry <- function(cruiseCode) {
   
   ca_sql <- paste("
 		SELECT 
-		fldCruiseStationNumber AS Haul,
-		fldGearCode AS GearCode,
-		fldMainSpeciesCode AS SpCode, 
-		fldFishLength AS Lngth,
-		fldFishSex as Sex, 
-    fldFishMaturity as Maturity,
-		fldResult1 AS Age,
-		AVG(fldFishWholeWeight) AS Weight,
-    COUNT(fldInternalBiologicalSampleID) AS CaNoAtLen  
-		FROM dbo.tblDataBiologicalSamples    
-  		  WHERE fldCruiseName='", cruiseCode, "' GROUP BY fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode,  fldFishLength, fldFishSex, fldFishMaturity, fldResult1; ", sep = "") # removed  AND fldResult1 is not null
+		a.fldCruiseStationNumber AS Haul,
+		a.fldGearCode AS GearCode,
+		a.fldMainSpeciesCode AS SpCode, 
+		a.fldFishLength AS Lngth,
+		a.fldFishSex as Sex, 
+    		a.fldFishMaturity as Maturity,
+		a.fldResult1 AS Age,
+		AVG(a.fldFishWholeWeight) AS Weight,
+    		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
+		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
+  		WHERE a.fldCruiseName='", cruiseCode, "' AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") # removed  AND fldResult1 is not null
   
   ca_sql <- gsub('\n','',ca_sql)	
   caNonCore_qry <- gsub('\t','',ca_sql)  
