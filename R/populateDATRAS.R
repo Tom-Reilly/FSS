@@ -8,9 +8,11 @@ populateHH <- function(cruiseInfo, myVessel, chronData, file) {
 
     hhline <- paste("HH") #F1 - RecordType
     hhline <- paste(hhline, cruiseInfo[["SurveyQuarter"]], sep = ",") #F2 - Quarter
-    hhline <- paste(hhline, "SCO", sep = ",") #F3 - Country
+    hhline <- paste(hhline, "GB-SCOT", sep = ",") #F3 - Country
+    # Changed country code from "SCO" on 03/11/2020
 
-    hhline <- paste(hhline, myVessel, sep = ",") #F4 - Vessel
+    hhline <- paste(hhline, "748S", sep = ",") #F4 - Vessel
+    # Changed vessel from output of myVessel to "748S"
 
     gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", chronData$GearCode[i], sep="")
     gear_detail <- sqlQuery(channel, gear_qry)
@@ -240,8 +242,8 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           hlline <- paste("HL", sep = ",") #F1 Record Type
           hlline <- paste(hlline, cruiseInfo[["SurveyQuarter"]], sep = ",") #F2 Quarter
-          hlline <- paste(hlline, "SCO", sep = ",") #F3 Country
-          hlline <- paste(hlline, myVessel, sep = ",") #F4 Ship
+          hlline <- paste(hlline, "GB-SCOT", sep = ",") #F3 Country
+          hlline <- paste(hlline, "748S", sep = ",") #F4 Ship
 
           gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", chronData$GearCode[i], sep="")
           gear_detail <- sqlQuery(channel, gear_qry)
@@ -343,8 +345,8 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
 
           hlline <- paste("HL", sep = ",") #F1 Record Type
           hlline <- paste(hlline, cruiseInfo[["SurveyQuarter"]], sep = ",") #F2 Quarter
-          hlline <- paste(hlline, "SCO", sep = ",") #F3 Country
-          hlline <- paste(hlline, myVessel, sep = ",") #F4 Ship
+          hlline <- paste(hlline, "GB-SCOT", sep = ",") #F3 Country
+          hlline <- paste(hlline, "748S", sep = ",") #F4 Ship
 
           gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", chronData$GearCode[i], sep="")
           gear_detail <- sqlQuery(channel, gear_qry)
@@ -436,8 +438,8 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
 
       caline <- paste("CA", sep = ",") #CAF1 - RecordType
       caline <- paste(caline, cruiseInfo[["SurveyQuarter"]], sep = ",") #CAF2 - Quarter
-      caline <- paste(caline, "SCO", sep = ",") #CAF3 - Country
-      caline <- paste(caline, myVessel, sep = ",") #CAF4 - Ship
+      caline <- paste(caline, "GB-SCOT", sep = ",") #CAF3 - Country
+      caline <- paste(caline, "748S", sep = ",") #CAF4 - Ship
       caline <- paste(caline, ca_gear_detail$fldDATRASCode[1], sep = ",") #CAF5 - Gear
       caline <- paste(caline, ca_gear_detail$fldDATRASSweepLength[1], sep = ",") #CAF6 - Sweep length
       caline <- paste(caline, ca_gear_detail$fldDATRASGearException[1], sep = ",") #CAF7 - GearExp
@@ -585,8 +587,8 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
       caline <- paste("CA", sep = ",") #CAF1 - RecordType
       caline <- paste(caline, cruiseInfo[["SurveyQuarter"]], sep = ",") #CAF2 - Quarter
-      caline <- paste(caline, "SCO", sep = ",") #CAF3 - Country
-      caline <- paste(caline, myVessel, sep = ",") #CAF4 - Ship
+      caline <- paste(caline, "GB-SCOT", sep = ",") #CAF3 - Country
+      caline <- paste(caline, "748S", sep = ",") #CAF4 - Ship
       caline <- paste(caline, ca_gear_detail$fldDATRASCode[1], sep = ",") #CAF5 - Gear
       caline <- paste(caline, ca_gear_detail$fldDATRASSweepLength[1], sep = ",") #CAF6 - Sweep length
       caline <- paste(caline, ca_gear_detail$fldDATRASGearException[1], sep = ",") #CAF7 - GearExp
@@ -684,3 +686,4 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 }
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
+# 03/11/2020 - Updated the country code and ship code in HH, HL and CA
