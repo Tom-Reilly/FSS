@@ -8,12 +8,15 @@ Write Output for DATRAS
 Extract the relevant data and output the file in the required format for submission to DATRAS.
 }
 \usage{
-writeDATRAS(cruiseCodeSeries)
+writeDATRAS(cruiseCodeSeries, path)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{cruiseCodeSeries}{
 a two element vector or a two column data frame containing the cruise code and cruise series to be queried.
+}
+  \item{path}{
+the file path to write the file to.    
 }
 }
 \details{
@@ -28,10 +31,10 @@ A text file will be written to your directory containing the relevant HH, HL and
 \examples{
 # Write the DATRAS file for the West Coast IBTS survey in quarter 1 2016
 cruise <- cruiseSelector(years = 2016, quarters = 1, series = "WCIBTS")
-writeDATRAS(cruise)
+writeDATRAS(cruise, "N:/")
 
 # Write the DATRAS file for the West Coast IBTS survey in quarter 1 2016 - Alternate method
-writeDATRAS(c("0316S","WCIBTSQ1"))
+writeDATRAS(c("0316S","WCIBTSQ1"), "N:/")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
