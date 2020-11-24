@@ -1,4 +1,4 @@
-writeDATRAS <- function(cruiseCodeSeries) {
+writeDATRAS <- function(cruiseCodeSeries, path) {
 
 cat("Extracting DATRAS data")
 
@@ -6,6 +6,7 @@ cat("\n-------------------------------------------------------------------------
 
   if(missing(cruiseCodeSeries)) {stop("Please enter the cruise or cruises you wish to extract data from")}
   if(is.vector(cruiseCodeSeries) && length(cruiseCodeSeries) > 2) {stop("Please only supply two elements to the vector")}
+  if(missing(path)) {stop("Please provide a file path to write to")}
 
   # Set switch based on whether a vector or dataframe has been supplied for cruiseCodeSeries
   if(is.vector(cruiseCodeSeries)) {codeSwitch <- 0}
@@ -27,7 +28,7 @@ cat("\n-------------------------------------------------------------------------
 
     chronData <- sqlQuery(channel, chron_qry(cruiseCode))
 
-    op <- file(paste("/DATRAS-", cruiseCode, ".txt", sep = ""), "w")
+    op <- file(paste(path, cruiseCode, ".txt", sep = ""), "w")
 
     ca_info <- populateHH(cruiseInfo, myVessel, chronData, op)
 
@@ -65,7 +66,7 @@ cat("\n-------------------------------------------------------------------------
 
       chronData <- sqlQuery(channel, chron_qry(cruiseCodeSeries$fldCruiseName[i]))
 
-      op <- file(paste("/DATRAS-", cruiseCodeSeries$fldCruiseName[i], ".txt", sep = ""), "w")
+      op <- file(paste(path, cruiseCodeSeries$fldCruiseName[i], ".txt", sep = ""), "w")
 
       ca_info <- populateHH(cruiseInfo, myVessel, chronData, op)
 
