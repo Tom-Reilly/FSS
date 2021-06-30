@@ -95,14 +95,15 @@ populateHH <- function(cruiseInfo, myVessel, chronData, file) {
 
     hhline <- paste(hhline, hydro, sep = ",") #F25 - Associated Hydro
 
+    # 20210630 data type changed to P
     if(chronData$Valid[i] == 'V') {
       hhline <- paste(hhline, 1,sep = ",") #F26 - Species Reporting
       hhline <- paste(hhline, 1,sep = ",") #F27 - BycatchSpecies Reporting
-      hhline <- paste(hhline, "R",sep = ",") #F28 - DataType
+      hhline <- paste(hhline, "P",sep = ",") #F28 - DataType
     } else {
       hhline <- paste(hhline, 0, sep = ",") #F26 - Species Reporting
       hhline <- paste(hhline, 0,sep = ",") #F27 - BycatchSpecies Reporting
-      hhline <- paste(hhline, "R", sep = ",") #F28 - DataType
+      hhline <- paste(hhline, "P", sep = ",") #F28 - DataType
     }
 
     if(is.na(chronData$HeadLine[i])) {hdl <- -9} else {hdl <- format(round(chronData$HeadLine[i], 1), nsmall = 1)}
@@ -280,7 +281,8 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           hlline <- paste(hlline, sx, sep = ",") #F15 - Sex
 
           sp <- length_data$SpCode[s]
-          tot_fish <- sum(length_data$Measured[which(length_data$SpCode == length_data$SpCode[s] & length_data$Sex == length_data$Sex[s])])
+          # 20210630 added stipulation for category
+          tot_fish <- sum(length_data$Measured[which(length_data$SpCode == length_data$SpCode[s] & length_data$Sex == length_data$Sex[s] & length_data$Category == length_data$Category[s)])
           tot_fish <- round(tot_fish, 0)
 
           hlline <- paste(hlline, tot_fish, sep = ",") #F16 - Total number of fish
