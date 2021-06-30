@@ -236,6 +236,10 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
     if(chronData$Valid[i] == 'V') {
 
       length_data <- sqlQuery(channel, length_qry(cruiseCode, chronData[i, ]))
+      
+      length_data = length_data %>%
+               group_by(SpCode,Category) %>%
+               mutate(id=paste(Category,cumsum(!duplicated(RaisingFactor)),sep=""))
 
       for(s in 1:nrow(length_data)) {
 
@@ -282,16 +286,17 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           sp <- length_data$SpCode[s]
           # 20210630 added stipulation for category
-          tot_fish <- sum(length_data$Measured[which(length_data$SpCode == length_data$SpCode[s] & length_data$Sex == length_data$Sex[s] & length_data$Category == length_data$Category[s)])
+          tot_fish <- sum(length_data$Measured[which(length_data$SpCode == length_data$SpCode[s] & length_data$Sex == length_data$Sex[s] & length_data$id == length_data$id[s)])
           tot_fish <- round(tot_fish, 0)
 
           hlline <- paste(hlline, tot_fish, sep = ",") #F16 - Total number of fish
 
-          hlline <- paste(hlline, 1, sep = ",") #F17 - Category Identifier
+          # 20210630 changed from 1 to populate with sub categories
+          hlline <- paste(hlline, length_data$id[s], sep = ",") #F17 - Category Identifier
 
-          #noMeas <- sum(length_data$Measured[which(length_data$SpCode==length_data$SpCode[s] & length_data$Sex==length_data$Sex[s])])
-          #hlline <- paste(hlline,noMeas,sep=",") #F18 - Number measured in haul
-          hlline <- paste(hlline, -9, sep = ",") #F18 - Number measured in haul - TEMPORARILY SET TO -9 DUE TO LACK OF RAISING FACTOR. ICES FORMAT IS SMALLINT, SO WILL NOT SUPPORT RAISED NUMBERS HERE.
+          noMeas <- sum(length_data$Measured[which(length_data$SpCode==length_data$SpCode[s] & length_data$Sex==length_data$Sex[s])])
+          hlline <- paste(hlline,noMeas,sep=",") #F18 - Number measured in haul
+          #hlline <- paste(hlline, -9, sep = ",") #F18 - Number measured in haul - TEMPORARILY SET TO -9 DUE TO LACK OF RAISING FACTOR. ICES FORMAT IS SMALLINT, SO WILL NOT SUPPORT RAISED NUMBERS HERE.
 
           #NOTE this is where we are missing raising factors
           hlline <- paste(hlline, "1.0000", sep = ",") #F19 - Sub factor
