@@ -65,6 +65,7 @@ length_qry <- function(cruiseCode, chronData) {
 	dbo.tblDataLengthSamples.fldLengthGroup AS Length,
 	dbo.tblDataLengthSamples.fldCategoryNumber AS Category,
 	dbo.tblDataLengthSamples.fldLengthGroupRaisingFactor AS RaisingFactor,
+	dbo.tblDataLengthSamples.fldCategoryRaisedNumberAtLength AS Raised,
 	dbo.tblDataLengthSamples.fldMeasuredNumberAtLength AS Measured 
 	FROM 	dbo.tblDataLengthSamples WHERE 
 	dbo.tblDataLengthSamples.fldCruiseName='",cruiseCode,"' AND 
@@ -76,7 +77,9 @@ length_qry <- function(cruiseCode, chronData) {
 	dbo.tblDataLengthSamples.fldSex, 
 	dbo.tblDataLengthSamples.fldLengthGroup,
 	dbo.tblDataLengthSamples.fldCategoryNumber AS Category,
-	dbo.tblDataLengthSamples.fldLengthGroupRaisingFactor AS RaisingFactor", sep = "")
+	dbo.tblDataLengthSamples.fldLengthGroupRaisingFactor AS RaisingFactor,
+	dbo.tblDataLengthSamples.fldCategoryRaisedNumberAtLength,
+	dbo.tblDataLengthSamples.fldMeasuredNumberAtLength", sep = "")
   
   length_qry <- gsub('\n', '', length_sql)
 }
