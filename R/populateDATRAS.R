@@ -560,7 +560,7 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
           
       # if age information is present then report the age source used
       if(age != -9) {
-        agesrc <- 'OT'
+        agesrc <- 'otolith'
       } else {
         agesrc <- -9
       }
@@ -674,7 +674,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
           
       # if age information is present then report the age source used
       if(age != -9) {
-        agesrc <- 'OT'
+        agesrc <- 'otolith'
       } else {
         agesrc <- -9
       }
