@@ -238,7 +238,7 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
       length_data <- sqlQuery(channel, length_qry(cruiseCode, chronData[i, ]))
       
       length_data = length_data %>%
-               group_by(SpCode,Category) %>%
+               group_by(as.factor(SpCode),Category) %>%
                mutate(id=paste(Category,cumsum(!duplicated(RaisingFactor)),sep=""))
 
       for(s in 1:nrow(length_data)) {
