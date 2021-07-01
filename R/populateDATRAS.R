@@ -300,7 +300,7 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           #hlline <- paste(hlline, -9, sep = ",") #F18 - Number measured in haul - TEMPORARILY SET TO -9 DUE TO LACK OF RAISING FACTOR. ICES FORMAT IS SMALLINT, SO WILL NOT SUPPORT RAISED NUMBERS HERE.
 
           #NOTE this is where we are missing raising factors 20210630 changed to provide the raising factor
-          hlline <- paste(hlline, round(length_data$RaisingFactor[s], 4), sep = ",") #F19 - Sub factor
+          hlline <- paste(hlline, sprintf("%.4f",length_data$RaisingFactor[s]), sep = ",") #F19 - Sub factor
 
           hlline <- paste(hlline, -9, sep = ",") #F20 - Sub weight
 
@@ -393,7 +393,7 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
 
           hlline <- paste(hlline, NotMeasuredSp$Count[s], sep = ",") #F16 - TotalNo
 
-          hlline <- paste(hlline, 1, sep = ",") #F17 - CatIdentifier
+          hlline <- paste(hlline, 11, sep = ",") #F17 - CatIdentifier
 
           hlline <- paste(hlline, -9, sep = ",") #F18- NoMeas
 
