@@ -285,8 +285,8 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           hlline <- paste(hlline, sx, sep = ",") #F15 - Sex
 
           sp <- length_data$SpCode[s]
-          # 20210630 added stipulation for category
-          tot_fish <- sum(length_data$Measured[which(length_data$SpCode == length_data$SpCode[s] & length_data$Sex == length_data$Sex[s] & length_data$id == length_data$id[s)])
+          # 20210630 changed measured to raised and added stipulation for category
+          tot_fish <- sum(length_data$Raised[which(length_data$SpCode == length_data$SpCode[s] & length_data$Sex == length_data$Sex[s] & length_data$Category == length_data$Category[s])])
           tot_fish <- round(tot_fish, 0)
 
           hlline <- paste(hlline, tot_fish, sep = ",") #F16 - Total number of fish
@@ -294,16 +294,18 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           # 20210630 changed from 1 to populate with sub categories
           hlline <- paste(hlline, length_data$id[s], sep = ",") #F17 - Category Identifier
 
-          noMeas <- sum(length_data$Measured[which(length_data$SpCode==length_data$SpCode[s] & length_data$Sex==length_data$Sex[s])])
+          # Added stipulation for category
+          noMeas <- sum(length_data$Measured[which(length_data$SpCode==length_data$SpCode[s] & length_data$Sex==length_data$Sex[s] & length_data$Category == length_data$Category[s])])
           hlline <- paste(hlline,noMeas,sep=",") #F18 - Number measured in haul
           #hlline <- paste(hlline, -9, sep = ",") #F18 - Number measured in haul - TEMPORARILY SET TO -9 DUE TO LACK OF RAISING FACTOR. ICES FORMAT IS SMALLINT, SO WILL NOT SUPPORT RAISED NUMBERS HERE.
 
-          #NOTE this is where we are missing raising factors
-          hlline <- paste(hlline, "1.0000", sep = ",") #F19 - Sub factor
+          #NOTE this is where we are missing raising factors 20210630 changed to provide the raising factor
+          hlline <- paste(hlline, round(length_data$RaisingFactor[s], 4), sep = ",") #F19 - Sub factor
 
           hlline <- paste(hlline, -9, sep = ",") #F20 - Sub weight
 
-          cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", sep = "")
+          # added stipualtion for category
+          cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", " AND fldCategoryNumber='", length_data$Category[s], "'",sep = "")
           catch_weight_data <- sqlQuery(channel, cw_sql)
           catch_weight <- round((catch_weight_data$CatchWeight[1] * 1000), 0)
 
