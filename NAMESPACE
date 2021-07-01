@@ -1,5 +1,6 @@
 export(ODBCConnect, cruiseSelector, chronDat, lengthDat, bioDat, writeDATRAS, mapHaulTracks)
 importFrom('RODBC', odbcConnect, sqlFetch, sqlQuery)
+import(tidyverse)
 importFrom('plyr', ldply)
 importFrom('stringr', str_extract)
 importFrom("methods", is)
