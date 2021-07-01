@@ -3,7 +3,7 @@
 populateHH <- function(cruiseInfo, myVessel, chronData, file) {
 
   ca_info <- data.frame()
-
+  
   for(i in 1:nrow(chronData)) {
 
     hhline <- paste("HH") #F1 - RecordType
