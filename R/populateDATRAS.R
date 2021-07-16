@@ -3,12 +3,12 @@
 populateHH <- function(cruiseInfo, myVessel, chronData, file) {
 
   ca_info <- data.frame()
-
+  
   for(i in 1:nrow(chronData)) {
 
     hhline <- paste("HH") #F1 - RecordType
     hhline <- paste(hhline, cruiseInfo[["SurveyQuarter"]], sep = ",") #F2 - Quarter
-    hhline <- paste(hhline, "GB-SCOT", sep = ",") #F3 - Country
+    hhline <- paste(hhline, "GB-SCT", sep = ",") #F3 - Country
     # Changed country code from "SCO" on 03/11/2020
 
     hhline <- paste(hhline, "748S", sep = ",") #F4 - Vessel
@@ -95,14 +95,15 @@ populateHH <- function(cruiseInfo, myVessel, chronData, file) {
 
     hhline <- paste(hhline, hydro, sep = ",") #F25 - Associated Hydro
 
+    # 20210630 data type changed to P
     if(chronData$Valid[i] == 'V') {
       hhline <- paste(hhline, 1,sep = ",") #F26 - Species Reporting
       hhline <- paste(hhline, 1,sep = ",") #F27 - BycatchSpecies Reporting
-      hhline <- paste(hhline, "R",sep = ",") #F28 - DataType
+      hhline <- paste(hhline, "P",sep = ",") #F28 - DataType
     } else {
       hhline <- paste(hhline, 0, sep = ",") #F26 - Species Reporting
       hhline <- paste(hhline, 0,sep = ",") #F27 - BycatchSpecies Reporting
-      hhline <- paste(hhline, "R", sep = ",") #F28 - DataType
+      hhline <- paste(hhline, "P", sep = ",") #F28 - DataType
     }
 
     if(is.na(chronData$HeadLine[i])) {hdl <- -9} else {hdl <- format(round(chronData$HeadLine[i], 1), nsmall = 1)}
@@ -235,6 +236,10 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
     if(chronData$Valid[i] == 'V') {
 
       length_data <- sqlQuery(channel, length_qry(cruiseCode, chronData[i, ]))
+      
+      length_data = length_data %>%
+               group_by(SpCode,Category) %>%
+               mutate(id=paste(Category,cumsum(!duplicated(RaisingFactor)),sep=""))
 
       for(s in 1:nrow(length_data)) {
 
@@ -242,7 +247,7 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           hlline <- paste("HL", sep = ",") #F1 Record Type
           hlline <- paste(hlline, cruiseInfo[["SurveyQuarter"]], sep = ",") #F2 Quarter
-          hlline <- paste(hlline, "GB-SCOT", sep = ",") #F3 Country
+          hlline <- paste(hlline, "GB-SCT", sep = ",") #F3 Country
           hlline <- paste(hlline, "748S", sep = ",") #F4 Ship
 
           gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", chronData$GearCode[i], sep="")
@@ -280,23 +285,27 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           hlline <- paste(hlline, sx, sep = ",") #F15 - Sex
 
           sp <- length_data$SpCode[s]
-          tot_fish <- sum(length_data$Measured[which(length_data$SpCode == length_data$SpCode[s] & length_data$Sex == length_data$Sex[s])])
+          # 20210630 changed measured to raised and added stipulation for category
+          tot_fish <- sum(length_data$Raised[which(length_data$SpCode == length_data$SpCode[s] & length_data$Sex == length_data$Sex[s] & length_data$Category == length_data$Category[s])])
           tot_fish <- round(tot_fish, 0)
 
           hlline <- paste(hlline, tot_fish, sep = ",") #F16 - Total number of fish
 
-          hlline <- paste(hlline, 1, sep = ",") #F17 - Category Identifier
+          # 20210630 changed from 1 to populate with sub categories
+          hlline <- paste(hlline, length_data$id[s], sep = ",") #F17 - Category Identifier
 
-          #noMeas <- sum(length_data$Measured[which(length_data$SpCode==length_data$SpCode[s] & length_data$Sex==length_data$Sex[s])])
-          #hlline <- paste(hlline,noMeas,sep=",") #F18 - Number measured in haul
-          hlline <- paste(hlline, -9, sep = ",") #F18 - Number measured in haul - TEMPORARILY SET TO -9 DUE TO LACK OF RAISING FACTOR. ICES FORMAT IS SMALLINT, SO WILL NOT SUPPORT RAISED NUMBERS HERE.
+          # Added stipulation for category
+          noMeas <- sum(length_data$Measured[which(length_data$SpCode==length_data$SpCode[s] & length_data$Sex==length_data$Sex[s] & length_data$Category == length_data$Category[s])])
+          hlline <- paste(hlline,noMeas,sep=",") #F18 - Number measured in haul
+          #hlline <- paste(hlline, -9, sep = ",") #F18 - Number measured in haul - TEMPORARILY SET TO -9 DUE TO LACK OF RAISING FACTOR. ICES FORMAT IS SMALLINT, SO WILL NOT SUPPORT RAISED NUMBERS HERE.
 
-          #NOTE this is where we are missing raising factors
-          hlline <- paste(hlline, "1.0000", sep = ",") #F19 - Sub factor
+          #NOTE this is where we are missing raising factors 20210630 changed to provide the raising factor
+          hlline <- paste(hlline, sprintf("%.4f",length_data$RaisingFactor[s]), sep = ",") #F19 - Sub factor
 
           hlline <- paste(hlline, -9, sep = ",") #F20 - Sub weight
 
-          cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", sep = "")
+          # added stipualtion for category
+          cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", " AND fldCategoryNumber='", length_data$Category[s], "'",sep = "")
           catch_weight_data <- sqlQuery(channel, cw_sql)
           catch_weight <- round((catch_weight_data$CatchWeight[1] * 1000), 0)
 
@@ -345,7 +354,7 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
 
           hlline <- paste("HL", sep = ",") #F1 Record Type
           hlline <- paste(hlline, cruiseInfo[["SurveyQuarter"]], sep = ",") #F2 Quarter
-          hlline <- paste(hlline, "GB-SCOT", sep = ",") #F3 Country
+          hlline <- paste(hlline, "GB-SCT", sep = ",") #F3 Country
           hlline <- paste(hlline, "748S", sep = ",") #F4 Ship
 
           gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", chronData$GearCode[i], sep="")
@@ -384,7 +393,7 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
 
           hlline <- paste(hlline, NotMeasuredSp$Count[s], sep = ",") #F16 - TotalNo
 
-          hlline <- paste(hlline, 1, sep = ",") #F17 - CatIdentifier
+          hlline <- paste(hlline, 11, sep = ",") #F17 - CatIdentifier
 
           hlline <- paste(hlline, -9, sep = ",") #F18- NoMeas
 
@@ -438,7 +447,7 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
 
       caline <- paste("CA", sep = ",") #CAF1 - RecordType
       caline <- paste(caline, cruiseInfo[["SurveyQuarter"]], sep = ",") #CAF2 - Quarter
-      caline <- paste(caline, "GB-SCOT", sep = ",") #CAF3 - Country
+      caline <- paste(caline, "GB-SCT", sep = ",") #CAF3 - Country
       caline <- paste(caline, "748S", sep = ",") #CAF4 - Ship
       caline <- paste(caline, ca_gear_detail$fldDATRASCode[1], sep = ",") #CAF5 - Gear
       caline <- paste(caline, ca_gear_detail$fldDATRASSweepLength[1], sep = ",") #CAF6 - Sweep length
@@ -551,7 +560,7 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
           
       # if age information is present then report the age source used
       if(age != -9) {
-        agesrc <- 'OT'
+        agesrc <- 'otolith'
       } else {
         agesrc <- -9
       }
@@ -587,7 +596,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
       caline <- paste("CA", sep = ",") #CAF1 - RecordType
       caline <- paste(caline, cruiseInfo[["SurveyQuarter"]], sep = ",") #CAF2 - Quarter
-      caline <- paste(caline, "GB-SCOT", sep = ",") #CAF3 - Country
+      caline <- paste(caline, "GB-SCT", sep = ",") #CAF3 - Country
       caline <- paste(caline, "748S", sep = ",") #CAF4 - Ship
       caline <- paste(caline, ca_gear_detail$fldDATRASCode[1], sep = ",") #CAF5 - Gear
       caline <- paste(caline, ca_gear_detail$fldDATRASSweepLength[1], sep = ",") #CAF6 - Sweep length
@@ -665,7 +674,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
           
       # if age information is present then report the age source used
       if(age != -9) {
-        agesrc <- 'OT'
+        agesrc <- 'otolith'
       } else {
         agesrc <- -9
       }

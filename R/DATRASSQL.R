@@ -55,7 +55,7 @@ chron_qry <- function(cruiseCode) {
 chron_qry <- gsub('\n', '', chron_qry)
 
 }
-
+# 20210630 added category and raising factor to query and changed raised number to measured number, removed sum and group by
 length_qry <- function(cruiseCode, chronData) {
   
   length_sql <- paste("
@@ -63,21 +63,23 @@ length_qry <- function(cruiseCode, chronData) {
 	dbo.tblDataLengthSamples.fldMainSpeciesCode AS SpCode,
 	dbo.tblDataLengthSamples.fldSex AS Sex,
 	dbo.tblDataLengthSamples.fldLengthGroup AS Length,
-	SUM(dbo.tblDataLengthSamples.fldCategoryRaisedNumberAtLength) AS Measured 
+	dbo.tblDataLengthSamples.fldCategoryNumber AS Category,
+	dbo.tblDataLengthSamples.fldLengthGroupRaisingFactor AS RaisingFactor,
+	dbo.tblDataLengthSamples.fldCategoryRaisedNumberAtLength AS Raised,
+	dbo.tblDataLengthSamples.fldMeasuredNumberAtLength AS Measured 
 	FROM 	dbo.tblDataLengthSamples WHERE 
 	dbo.tblDataLengthSamples.fldCruiseName='",cruiseCode,"' AND 
 	dbo.tblDataLengthSamples.fldCruiseStationNumber =", chronData$Haul, 
-                      " AND fldGearCode=", chronData$GearCode, " GROUP BY 
+                      " AND fldGearCode=", chronData$GearCode, " ORDER BY  
 	dbo.tblDataLengthSamples.fldCruiseName,
 	dbo.tblDataLengthSamples.fldCruiseStationNumber,
 	dbo.tblDataLengthSamples.fldMainSpeciesCode, 
 	dbo.tblDataLengthSamples.fldSex, 
-	dbo.tblDataLengthSamples.fldLengthGroup ORDER BY  
-	dbo.tblDataLengthSamples.fldCruiseName,
-	dbo.tblDataLengthSamples.fldCruiseStationNumber,
-	dbo.tblDataLengthSamples.fldMainSpeciesCode, 
-	dbo.tblDataLengthSamples.fldSex, 
-	dbo.tblDataLengthSamples.fldLengthGroup", sep = "")
+	dbo.tblDataLengthSamples.fldLengthGroup,
+	dbo.tblDataLengthSamples.fldCategoryNumber,
+	dbo.tblDataLengthSamples.fldLengthGroupRaisingFactor,
+	dbo.tblDataLengthSamples.fldCategoryRaisedNumberAtLength,
+	dbo.tblDataLengthSamples.fldMeasuredNumberAtLength", sep = "")
   
   length_qry <- gsub('\n', '', length_sql)
 }

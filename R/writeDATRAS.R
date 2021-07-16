@@ -30,12 +30,37 @@ cat("\n-------------------------------------------------------------------------
 
     op <- file(paste(path, cruiseCode, ".txt", sep = ""), "w")
 
+    hhheadline <- paste("RecordType", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "Month",
+                  "Day", "TimeShot", "DepthStratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong", "StatRec", "Depth",
+                  "HaulVal", "HydroStNo", "StdSpecRecCode", "BySpecRecCode", "DataType", "Netopening", "Rigging", "Tickler", "Distance", 
+                  "Warplngt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt", "DoorSpread", "WingSpread", "Buoyancy", "KiteDim", 
+                  "WgtGroundRope", "TowDir", "GroundSpeed", "SpeedWater", "SurCurDir", "SurCurSpeed", "BotCurDir", "BotCurSpeed", "WindDir",
+                  "WindSpeed", "SwellDir", "SwellHeight", "SurTemp", "BotTemp", "SurSal", "BotSal", "ThermoCline", "ThClineDepth", "CodendMesh",
+                  "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelSampType", "MinTrawlDepth", "MaxTrawlDepth", sep = ",")
+  
+    cat(hhheadline, file = op, sep = "\n", append = TRUE)
+    rm(hhheadline)
+    
     ca_info <- populateHH(cruiseInfo, myVessel, chronData, op)
 
+    hlheadline <- paste("RecordType", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "SpecCodeType",
+                        "SpecCode", "SpecVal", "Sex", "TotalNo", "CatIdentifier", "NoMeas", "SubFactor", "SubWgt", "CatCatchWgt", "LngtCode",
+                        "LngtClass", "HLNoAtLngt", "DevStage", "LenMeasType", sep = ",")
+  
+    cat(hlheadline, file = op, sep = "\n", append = TRUE)
+    rm(hlheadline)
+    
     populateHLmeas(cruiseInfo, myVessel, chronData, cruiseCode, op)
 
     populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCode, op)
 
+    caheadline <- paste("RecordType", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "SpecCodeType",
+                        "SpecCode", "AreaType", "AreaCode", "LngtCode", "LngtClass", "Sex", "Maturity", "PlusGr", "AgeRings", "CANoAtLngt",
+                        "IndWgt", "MaturityScale", "FishID", "GenSamp", "StomSamp", "AgeSource", "AgePrepMet", "OtGrading", "ParSamp", sep = ",")
+  
+    cat(caheadline, file = op, sep = "\n", append = TRUE)
+    rm(caheadline)
+    
     populateCAcore(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, op)
 
     populateCAnoncore(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, op)
@@ -67,12 +92,37 @@ cat("\n-------------------------------------------------------------------------
       chronData <- sqlQuery(channel, chron_qry(cruiseCodeSeries$fldCruiseName[i]))
 
       op <- file(paste(path, cruiseCodeSeries$fldCruiseName[i], ".txt", sep = ""), "w")
+      
+          hhheadline <- paste("RecordType", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "Month",
+                  "Day", "TimeShot", "DepthStratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong", "StatRec", "Depth",
+                  "HaulVal", "HydroStNo", "StdSpecRecCode", "BySpecRecCode", "DataType", "Netopening", "Rigging", "Tickler", "Distance", 
+                  "Warplngt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt", "DoorSpread", "WingSpread", "Buoyancy", "KiteDim", 
+                  "WgtGroundRope", "TowDir", "GroundSpeed", "SpeedWater", "SurCurDir", "SurCurSpeed", "BotCurDir", "BotCurSpeed", "WindDir",
+                  "WindSpeed", "SwellDir", "SwellHeight", "SurTemp", "BotTemp", "SurSal", "BotSal", "ThermoCline", "ThClineDepth", "CodendMesh",
+                  "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelSampType", "MinTrawlDepth", "MaxTrawlDepth", sep = ",")
+  
+      cat(hhheadline, file = op, sep = "\n", append = TRUE)
+      rm(hhheadline)
 
       ca_info <- populateHH(cruiseInfo, myVessel, chronData, op)
 
+      hlheadline <- paste("RecordType", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "SpecCodeType",
+                        "SpecCode", "SpecVal", "Sex", "TotalNo", "CatIdentifier", "NoMeas", "SubFactor", "SubWgt", "CatCatchWgt", "LngtCode",
+                        "LngtClass", "HLNoAtLngt", "DevStage", "LenMeasType", sep = ",")
+  
+      cat(hlheadline, file = op, sep = "\n", append = TRUE)
+      rm(hlheadline)
+      
       populateHLmeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], op)
 
       populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], op)
+      
+      caheadline <- paste("RecordType", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "SpecCodeType",
+                        "SpecCode", "AreaType", "AreaCode", "LngtCode", "LngtClass", "Sex", "Maturity", "PlusGr", "AgeRings", "CANoAtLngt",
+                        "IndWgt", "MaturityScale", "FishID", "GenSamp", "StomSamp", "AgeSource", "AgePrepMet", "OtGrading", "ParSamp", sep = ",")
+  
+      cat(caheadline, file = op, sep = "\n", append = TRUE)
+      rm(caheadline)
 
       populateCAcore(cruiseInfo, myVessel, ca_info, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
 

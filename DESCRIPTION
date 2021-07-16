@@ -4,7 +4,7 @@ Title: Interrogate the Fisheries Survey System
 Version: 0.1.0
 Author: Tom Reilly
 Maintainer: Tom Reilly <thomas.reilly@gov.scot>
-Depends: RODBC, stringr, plyr, methods, tidyverse
+Depends: RODBC, methods, tidyverse
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL-2
