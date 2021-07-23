@@ -1,6 +1,7 @@
 export(ODBCConnect, cruiseSelector, chronDat, lengthDat, bioDat, writeDATRAS, mapHaulTracks)
 importFrom('RODBC', odbcConnect, sqlFetch, sqlQuery)
-import('tidyverse')
+import('stringr')
+import('dplyr')
 importFrom("methods", is)
 importFrom('grDevices', dev.off, tiff)
 importFrom('graphics', axis, box, layout, legend, mtext, par, plot, polygon, segments)
