@@ -236,8 +236,9 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
     if(chronData$Valid[i] == 'V') {
 
       length_data <- sqlQuery(channel, length_qry(cruiseCode, chronData[i, ]))
-      
+      #20230612 added stipulation to remove species with no Aphia ID
       length_data = length_data %>%
+               filter(! is.na(fldAlternateSpeciesCode)) %>%
                group_by(SpCode,Category) %>%
                mutate(id=paste(Category,cumsum(!duplicated(RaisingFactor)),sep=""))
 
