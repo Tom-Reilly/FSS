@@ -57,7 +57,7 @@ chron_qry <- gsub('\n', '', chron_qry)
 }
 # 20210630 added category and raising factor to query and changed raised number to measured number, removed sum and group by
 length_qry <- function(cruiseCode, chronData) {
-  # added join to pull through the alternate species code
+  # 20230612 added join to pull through the alternate species code
   length_sql <- paste("
 	SELECT 
 	dbo.tblDataLengthSamples.fldMainSpeciesCode AS SpCode,
@@ -88,6 +88,7 @@ length_qry <- function(cruiseCode, chronData) {
 }
 
 co_qry <- function(cruiseCode, chronData) {
+  # 20230612 added join to pull through the alternate species code
   co_sql = paste( "SELECT fldMainSpeciesCode AS Species,
 	dbo.tblReferenceMainSpecies.fldAlternateSpeciesCode,
 	fldSex AS Sex,
