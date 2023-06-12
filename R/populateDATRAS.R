@@ -350,6 +350,8 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
     if(chronData$Valid[i] == 'V') {
 
       NotMeasuredSp <- sqlQuery(channel, co_qry(cruiseCode, chronData[i, ]))
+      # 20230612 added stipulation to remove NA aphia ID
+      NotMeasuredSp <- NotMeasuredSp %>% filter(! is.na(fldAlternateSpeciesCode))
 
       if(is.null(nrow(NotMeasuredSp)) == FALSE && (nrow(NotMeasuredSp) >= 1)) {
         for(s in 1:nrow(NotMeasuredSp)) {
