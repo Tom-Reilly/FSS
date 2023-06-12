@@ -89,16 +89,17 @@ length_qry <- function(cruiseCode, chronData) {
 
 co_qry <- function(cruiseCode, chronData) {
   # 20230612 added join to pull through the alternate species code
-  co_sql = paste( "SELECT fldMainSpeciesCode AS Species,
+  co_sql = paste( "SELECT 
+	dbo.tblDataCategories.fldMainSpeciesCode AS Species,
 	dbo.tblReferenceMainSpecies.fldAlternateSpeciesCode,
-	fldSex AS Sex,
-	fldGearCode AS GearCode,
-	fldCruiseStationNumber AS Haul,
-	SUM(fldCatchNumber) AS Count, SUM(fldCatchWeight) AS Weight 
+	dbo.tblDataCategories.fldSex AS Sex,
+	dbo.tblDataCategories.fldGearCode AS GearCode,
+	dbo.tblDataCategories.fldCruiseStationNumber AS Haul,
+	SUM(dbo.tblDataCategories.fldCatchNumber) AS Count, SUM(dbo.tblDataCategories.fldCatchWeight) AS Weight 
 	FROM dbo.tblDataCategories 
-	LEFT JOIN dbo.tblReferenceMainSpecies ON dbo.tblDataLengthSamples.fldMainSpeciesCode = dbo.tblReferenceMainSpecies.fldMainSpeciesCode
+	LEFT JOIN dbo.tblReferenceMainSpecies ON dbo.tblDataCategories.fldMainSpeciesCode = dbo.tblReferenceMainSpecies.fldMainSpeciesCode
 	WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber =", 
-                  chronData$Haul, " AND fldGearCode =", chronData$GearCode," AND fldMeasuringInterval is null GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode, fldSex", 
+                  chronData$Haul, " AND fldGearCode =", chronData$GearCode," AND fldMeasuringInterval is null GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, dbo.tblDataCategories.fldMainSpeciesCode, dbo.tblReferenceMainSpecies.fldAlternateSpeciesCode, fldSex", 
                   sep = "")
   
   co_qry <- gsub("\\n", "", co_sql)
