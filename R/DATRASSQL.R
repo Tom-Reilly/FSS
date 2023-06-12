@@ -57,17 +57,20 @@ chron_qry <- gsub('\n', '', chron_qry)
 }
 # 20210630 added category and raising factor to query and changed raised number to measured number, removed sum and group by
 length_qry <- function(cruiseCode, chronData) {
-  
+  # added join to pull through the alternate species code
   length_sql <- paste("
 	SELECT 
 	dbo.tblDataLengthSamples.fldMainSpeciesCode AS SpCode,
+	dbo.tblReferenceMainSpecies.fldAlternateSpeciesCode,
 	dbo.tblDataLengthSamples.fldSex AS Sex,
 	dbo.tblDataLengthSamples.fldLengthGroup AS Length,
 	dbo.tblDataLengthSamples.fldCategoryNumber AS Category,
 	dbo.tblDataLengthSamples.fldLengthGroupRaisingFactor AS RaisingFactor,
 	dbo.tblDataLengthSamples.fldCategoryRaisedNumberAtLength AS Raised,
 	dbo.tblDataLengthSamples.fldMeasuredNumberAtLength AS Measured 
-	FROM 	dbo.tblDataLengthSamples WHERE 
+	FROM 	dbo.tblDataLengthSamples 
+	LEFT JOIN dbo.tblReferenceMainSpecies ON dbo.tblDataLengthSamples.fldMainSpeciesCode = dbo.tblReferenceMainSpecies.fldMainSpeciesCode
+	WHERE 
 	dbo.tblDataLengthSamples.fldCruiseName='",cruiseCode,"' AND 
 	dbo.tblDataLengthSamples.fldCruiseStationNumber =", chronData$Haul, 
                       " AND fldGearCode=", chronData$GearCode, " ORDER BY  
