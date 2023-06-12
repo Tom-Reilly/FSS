@@ -305,7 +305,8 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           hlline <- paste(hlline, -9, sep = ",") #F20 - Sub weight
 
           # added stipualtion for category
-          cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", " AND fldCategoryNumber='", length_data$Category[s], "'",sep = "")
+          # 20230612 added in species sex to categorisation so catch weight is split by sex
+          cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", " AND fldSex='", length_data$Sex[s], "'", " AND fldCategoryNumber='", length_data$Category[s], "'",sep = "")
           catch_weight_data <- sqlQuery(channel, cw_sql)
           catch_weight <- round((catch_weight_data$CatchWeight[1] * 1000), 0)
 
