@@ -77,6 +77,7 @@ length_qry <- function(cruiseCode, chronData) {
 	dbo.tblDataLengthSamples.fldCruiseName,
 	dbo.tblDataLengthSamples.fldCruiseStationNumber,
 	dbo.tblDataLengthSamples.fldMainSpeciesCode, 
+	dbo.tblReferenceMainSpecies.fldAlternateSpeciesCode,
 	dbo.tblDataLengthSamples.fldSex, 
 	dbo.tblDataLengthSamples.fldLengthGroup,
 	dbo.tblDataLengthSamples.fldCategoryNumber,
