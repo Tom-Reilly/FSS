@@ -88,12 +88,15 @@ length_qry <- function(cruiseCode, chronData) {
 }
 
 co_qry <- function(cruiseCode, chronData) {
-  co_sql = paste( "SELECT fldMainSpeciesCode AS Species, 
+  co_sql = paste( "SELECT fldMainSpeciesCode AS Species,
+	dbo.tblReferenceMainSpecies.fldAlternateSpeciesCode,
 	fldSex AS Sex,
 	fldGearCode AS GearCode,
 	fldCruiseStationNumber AS Haul,
 	SUM(fldCatchNumber) AS Count, SUM(fldCatchWeight) AS Weight 
-	FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber =", 
+	FROM dbo.tblDataCategories 
+	LEFT JOIN dbo.tblReferenceMainSpecies ON dbo.tblDataLengthSamples.fldMainSpeciesCode = dbo.tblReferenceMainSpecies.fldMainSpeciesCode
+	WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber =", 
                   chronData$Haul, " AND fldGearCode =", chronData$GearCode," AND fldMeasuringInterval is null GROUP BY fldCruiseName, fldCruiseStationNumber, fldGearCode, fldMainSpeciesCode, fldSex", 
                   sep = "")
   
