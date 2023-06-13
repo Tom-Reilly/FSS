@@ -294,6 +294,7 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           # 20230613 Added stipulation to change category identifier where species has both berried devStage and no devStage females
           uniqSex = length_data %>%
+            ungroup %>%
             filter(SpCode == SpCode[s],
                    Category == Category[s]) %>%
             select(Sex) %>%
