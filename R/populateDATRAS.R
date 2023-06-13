@@ -292,8 +292,20 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           hlline <- paste(hlline, tot_fish, sep = ",") #F16 - Total number of fish
 
+          # 20230613 Added stipulation to change category identifier where species has both berried devStage and no devStage females
+          uniqSex = length_data %>%
+            filter(SpCode == SpCode[s],
+                   Category == Category[s]) %>%
+            select(Sex) %>%
+            unique()
+
+          if(length_data$Sex[s] == "B" & "F" %in% uniqSex) {
+            catID = "21"
+          } else {
+            catID = length_data$id[s]
+          }
           # 20210630 changed from 1 to populate with sub categories
-          hlline <- paste(hlline, length_data$id[s], sep = ",") #F17 - Category Identifier
+          hlline <- paste(hlline, catID, sep = ",") #F17 - Category Identifier
 
           # Added stipulation for category
           noMeas <- sum(length_data$Measured[which(length_data$SpCode==length_data$SpCode[s] & length_data$Sex==length_data$Sex[s] & length_data$Category == length_data$Category[s])])
