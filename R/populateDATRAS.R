@@ -298,7 +298,8 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
             filter(SpCode == SpCode[s],
                    Category == Category[s]) %>%
             select(Sex) %>%
-            unique()
+            unique() %>%
+            pull()
 
           if(length_data$Sex[s] == "B" & "F" %in% uniqSex) {
             catID = "21"
