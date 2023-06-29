@@ -236,8 +236,9 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
     if(chronData$Valid[i] == 'V') {
 
       length_data <- sqlQuery(channel, length_qry(cruiseCode, chronData[i, ]))
-      
+      #20230612 added stipulation to remove species with no Aphia ID
       length_data = length_data %>%
+               filter(! is.na(fldAlternateSpeciesCode)) %>%
                group_by(SpCode,Category) %>%
                mutate(id=paste(Category,cumsum(!duplicated(RaisingFactor)),sep=""))
 
@@ -291,8 +292,22 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           hlline <- paste(hlline, tot_fish, sep = ",") #F16 - Total number of fish
 
+          # 20230613 Added stipulation to change category identifier where species has both berried devStage and no devStage females
+          uniqSex = length_data %>%
+            ungroup %>%
+            filter(SpCode == SpCode[s],
+                   Category == Category[s]) %>%
+            select(Sex) %>%
+            unique() %>%
+            pull()
+
+          if(length_data$Sex[s] == "B" & "F" %in% uniqSex) {
+            catID = "21"
+          } else {
+            catID = length_data$id[s]
+          }
           # 20210630 changed from 1 to populate with sub categories
-          hlline <- paste(hlline, length_data$id[s], sep = ",") #F17 - Category Identifier
+          hlline <- paste(hlline, catID, sep = ",") #F17 - Category Identifier
 
           # Added stipulation for category
           noMeas <- sum(length_data$Measured[which(length_data$SpCode==length_data$SpCode[s] & length_data$Sex==length_data$Sex[s] & length_data$Category == length_data$Category[s])])
@@ -305,7 +320,8 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           hlline <- paste(hlline, -9, sep = ",") #F20 - Sub weight
 
           # added stipualtion for category
-          cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", " AND fldCategoryNumber='", length_data$Category[s], "'",sep = "")
+          # 20230612 added in species sex to categorisation so catch weight is split by sex
+          cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", " AND fldSex='", length_data$Sex[s], "'", " AND fldCategoryNumber='", length_data$Category[s], "'",sep = "")
           catch_weight_data <- sqlQuery(channel, cw_sql)
           catch_weight <- round((catch_weight_data$CatchWeight[1] * 1000), 0)
 
@@ -348,6 +364,8 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
     if(chronData$Valid[i] == 'V') {
 
       NotMeasuredSp <- sqlQuery(channel, co_qry(cruiseCode, chronData[i, ]))
+      # 20230612 added stipulation to remove NA aphia ID
+      NotMeasuredSp <- NotMeasuredSp %>% filter(! is.na(fldAlternateSpeciesCode))
 
       if(is.null(nrow(NotMeasuredSp)) == FALSE && (nrow(NotMeasuredSp) >= 1)) {
         for(s in 1:nrow(NotMeasuredSp)) {
