@@ -512,38 +512,20 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
 
       caline <- paste(caline, sx, sep = ",") #CAF18 - Sex
 
+      # set whether to use pre-2024 maturity scale or post
+      if(ca_info[ca_info[, 1] == ca_data$Haul[b], 2] <= 2023) {years = 2023} else {years = 2024}
+      
       if(is.na(ca_data$Maturity[b])) {
         mat = -9
       } else {
         if(ca_data$Maturity[b] == 'U') {
           mat = -9
-        } else {
-          #Specific translation of maturity codes for Herring needed
-          if(ca_data$SpCode[b] == 'HER') {
-            if(ca_data$Maturity[b] == 1 || ca_data$Maturity[b] == 2) {
-              mat = 61
-            } else if(ca_data$Maturity[b] == 3 || ca_data$Maturity[b] == 4 || ca_data$Maturity[b] == 5) {
-              mat = 62
-            } else if(ca_data$Maturity[b] == 6) {
-              mat = 63
-            } else {
-              mat = 64
-            }
-          } else if(ca_data$SpCode[b] == 'MAC') {
-            if(ca_data$Maturity[b] == 1) {
-              mat = 61
-            } else if(ca_data$Maturity[b] == 2 || ca_data$Maturity[b] == 3) {
-              mat = 62
-            } else if (ca_data$Maturity[b] == 4 || ca_data$Maturity[b] == 5) {
-              mat = 63
-            } else {
-              mat = 64
-            }
-          } else if(cruiseSeries == 'NSIBTSQ1' || cruiseSeries == 'WCIBTSQ1') {
-            mat = paste(6, ca_data$Maturity[b], sep = "")
-          } else {
-            mat = -9
-          }
+      } else {
+        mat = convGroups %>% filter(grepl(aph, SpeciesAphiaId),
+                                    OldScale %in% ca_data$Maturity[b],
+                                    YearGroup == years,
+                                    grepl(cruiseInfo[["SurveyQuarter"]], Quarter)) %>%
+                              pull(NewScale)
         }
       }
 
@@ -563,7 +545,7 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
       
       # if maturity information is present then report the maturity scale used
       if(mat != -9) {
-        matscale <- 'M6'
+        matscale <- 'SMSF'
       } else {
         matscale <- -9
       }
