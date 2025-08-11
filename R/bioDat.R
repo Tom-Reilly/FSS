@@ -131,7 +131,7 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
     }
     bioDataTab <- dplyr::bind_rows(bioDataTab)
     names(bioDataTab)[(lastcol+1):(lastcol+2)] <- c("CruiseName", "SeriesName")
-    bioDataTab <- bioDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
+    bioDataTab <- bioDataTab[,c("CruiseName","SeriesName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
                                 "GuttedWeight","Sex","Maturity","Age")]
     rm(j)
   }
@@ -141,4 +141,5 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   if(codeSwitch == 1 & as.List == FALSE) {return(bioDataTab)}
   
 }
+
 
