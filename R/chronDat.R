@@ -190,9 +190,9 @@ chronDat <- function(cruiseCodeSeries, as.List = FALSE) {
       chronDataTab[[j]][lastcol+1] <- rep(cruiseCodeSeries$fldCruiseName[j], nrow(chronDataTab[[j]]))
       chronDataTab[[j]][lastcol+2] <- rep(cruiseCodeSeries$fldSeriesName[j], nrow(chronDataTab[[j]]))
     }
-    chronDataTab <- ldply(chronDataTab, data.frame, row.names = NULL)
-    names(chronDataTab)[(lastcol+2):(lastcol+3)] <- c("CruiseName","SeriesName")
-    chronDataTab <- chronDataTab[,c(".id","CruiseName","SeriesName","Haul","StatSquare","GearCode","GearName","Stratum","StratumName","TimeShot",
+    chronDataTab <- dplyr::bind_rows(chronDataTab)
+    names(chronDataTab)[(lastcol+1):(lastcol+2)] <- c("CruiseName","SeriesName")
+    chronDataTab <- chronDataTab[,c("CruiseName","SeriesName","Haul","StatSquare","GearCode","GearName","Stratum","StratumName","TimeShot",
                                     "TimeHaul","ShotLat","ShotLon","HaulLat","HaulLon","HaulDepth","Valid")]
     rm(j)
   }
@@ -201,4 +201,6 @@ chronDat <- function(cruiseCodeSeries, as.List = FALSE) {
   if(codeSwitch == 1 & as.List == TRUE) {return(chronDataList)}
   if(codeSwitch == 1 & as.List == FALSE) {return(chronDataTab)}
   
+
 }
+
