@@ -129,8 +129,8 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
       bioDataTab[[j]][lastcol+1] <- rep(strsplit(names(bioDataTab), " ")[[j]][1], nrow(bioDataTab[[j]]))
       bioDataTab[[j]][lastcol+2] <- rep(strsplit(names(bioDataTab), " ")[[j]][2], nrow(bioDataTab[[j]]))
     }
-    bioDataTab <- ldply(bioDataTab, data.frame, row.names = NULL)
-    names(bioDataTab)[(lastcol+2):(lastcol+3)] <- c("CruiseName", "SeriesName")
+    bioDataTab <- dplyr::bind_rows(bioDataTab)
+    names(bioDataTab)[(lastcol+1):(lastcol+2)] <- c("CruiseName", "SeriesName")
     bioDataTab <- bioDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","SampleID","Species","LatinName","Length","WholeWeight",
                                 "GuttedWeight","Sex","Maturity","Age")]
     rm(j)
@@ -141,3 +141,4 @@ bioDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   if(codeSwitch == 1 & as.List == FALSE) {return(bioDataTab)}
   
 }
+
