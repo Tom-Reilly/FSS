@@ -192,7 +192,7 @@ chronDat <- function(cruiseCodeSeries, as.List = FALSE) {
     }
     chronDataTab <- dplyr::bind_rows(chronDataTab)
     names(chronDataTab)[(lastcol+1):(lastcol+2)] <- c("CruiseName","SeriesName")
-    chronDataTab <- chronDataTab[,c(".id","CruiseName","SeriesName","Haul","StatSquare","GearCode","GearName","Stratum","StratumName","TimeShot",
+    chronDataTab <- chronDataTab[,c("CruiseName","SeriesName","Haul","StatSquare","GearCode","GearName","Stratum","StratumName","TimeShot",
                                     "TimeHaul","ShotLat","ShotLon","HaulLat","HaulLon","HaulDepth","Valid")]
     rm(j)
   }
@@ -203,3 +203,4 @@ chronDat <- function(cruiseCodeSeries, as.List = FALSE) {
   
 
 }
+
