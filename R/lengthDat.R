@@ -123,9 +123,9 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
       lfrqDataTab[[j]][lastcol+1] <- rep(strsplit(names(lfrqDataTab), " ")[[j]][1], nrow(lfrqDataTab[[j]]))
       lfrqDataTab[[j]][lastcol+2] <- rep(strsplit(names(lfrqDataTab), " ")[[j]][2], nrow(lfrqDataTab[[j]]))
     }
-    lfrqDataTab <- ldply(lfrqDataTab, data.frame, row.names = NULL)
-    names(lfrqDataTab)[(lastcol+2):(lastcol+3)] <- c("CruiseName", "SeriesName")
-    lfrqDataTab <- lfrqDataTab[,c(".id","CruiseName","SeriesName","Haul","GearCode","GearName","Species","LatinName","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
+    lfrqDataTab <- dplyr::bind_rows(lfrqDataTab)
+    names(lfrqDataTab)[(lastcol+1):(lastcol+2)] <- c("CruiseName", "SeriesName")
+    lfrqDataTab <- lfrqDataTab[,c("CruiseName","SeriesName","Haul","GearCode","GearName","Species","LatinName","Length","MeasuredNumber","RaisingFactor","RaisedNumber")]
     rm(j)
   }
 
@@ -134,3 +134,4 @@ lengthDat <- function(cruiseCodeSeries, species, as.List = FALSE) {
   if(codeSwitch == 1 & as.List == FALSE) {return(lfrqDataTab)}
 
 }
+
