@@ -323,7 +323,7 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
           # 20230612 added in species sex to categorisation so catch weight is split by sex
           cw_sql <- paste("SELECT SUM(fldCatchWeight) AS CatchWeight FROM dbo.tblDataCategories WHERE fldCruiseName='", cruiseCode, "' AND fldCruiseStationNumber=", chronData$Haul[i], " AND fldGearCode=", chronData$GearCode[i], " AND fldMainSpeciesCode='", length_data$SpCode[s], "'", " AND fldSex='", length_data$Sex[s], "'", " AND fldCategoryNumber='", length_data$Category[s], "'",sep = "")
           catch_weight_data <- sqlQuery(channel, cw_sql)
-          catch_weight <- format(round(catch_weight_data$CatchWeight[1] * 1000, 0), scientific = FALSE)
+          catch_weight <- as.integer(round(catch_weight_data$CatchWeight[1] * 1000, 0))
 
           hlline <- paste(hlline, catch_weight, sep = ",") #F21 - Catch Weight
 
@@ -419,7 +419,7 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
 
           hlline <- paste(hlline, -9, sep = ",") #F20 - SubWgt
 
-          NMcatch_weight <- format(round(NotMeasuredSp$Weight[s] * 1000, 0), scientific = FALSE)
+          NMcatch_weight <- as.integer(round(NotMeasuredSp$Weight[s] * 1000, 0))
 
           hlline <- paste(hlline, NMcatch_weight, sep = ",") #F21 - CatCatchWgt
 
@@ -714,5 +714,6 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
 # 03/11/2020 - Updated the country code and ship code in HH, HL and CA
+
 
 
