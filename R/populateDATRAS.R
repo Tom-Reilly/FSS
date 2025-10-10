@@ -419,7 +419,7 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
 
           hlline <- paste(hlline, -9, sep = ",") #F20 - SubWgt
 
-          NMcatch_weight <- round((NotMeasuredSp$Weight[s] * 1000), 0)
+          NMcatch_weight <- format(round(NotMeasuredSp$Weight[s] * 1000, 0), scientific = FALSE)
 
           hlline <- paste(hlline, NMcatch_weight, sep = ",") #F21 - CatCatchWgt
 
@@ -714,4 +714,5 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
 # 03/11/2020 - Updated the country code and ship code in HH, HL and CA
+
 
