@@ -1,6 +1,6 @@
 # Populate DATRAS
 
-populateHH <- function(cruiseInfo, myVessel, chronData, file) {
+populateHH <- function(cruiseInfo, cruiseSeries, myVessel, chronData, file) {
 
   ca_info <- data.frame()
   
@@ -219,6 +219,19 @@ populateHH <- function(cruiseInfo, myVessel, chronData, file) {
       hhline <- paste(hhline, -9, sep = ",") #F66 - MinTrawlDepth (highest point of the pelagic trawling)
       hhline <- paste(hhline, -9, sep = ",") #F67 - MaxTrawlDepth (lowest point of the pelagic trawling)
 
+      hhline <- paste(hhline, -9, sep = ",") #F68 - SurveyIndexArea - added 17/10/2025
+
+      if(cruiseSeries == "NSIBTSQ1") {survID <- "G1022"
+       } else if(cruiseSeries == "NSIBTSQ3") {survID <- "G2829"
+       } else if(cruiseSeries == "WCIBTSQ1") {survID <- "G4748"
+       } else if(cruiseSeries == "WCIBTSQ4") {survID <- "G4815"
+       } else if(cruiseSeries == "ROCKALL") {survID <- "G4436"
+       } else {survID <- -9}
+                                       
+      hhline <- paste(hhline, survID, sep = ",") #F69 - Survey - added 17/10/2025
+
+      hhline <- paste(hhline, 2995, sep = ",") #F70 - EDMO - added 17/10/2025
+
       cat(hhline, file = file, sep = "\n", append = TRUE)
       rm(hhline)
 
@@ -229,7 +242,7 @@ populateHH <- function(cruiseInfo, myVessel, chronData, file) {
 }
 
 
-populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
+populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, cruiseSeries, file) {
 
   for(i in 1:nrow(chronData)) {
 
@@ -344,6 +357,15 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 
           hlline <- paste(hlline, -9, sep = ",") #F26 LenMeasType (Type of length measurement)
 
+          if(cruiseSeries == "NSIBTSQ1") {survID <- "G1022"
+           } else if(cruiseSeries == "NSIBTSQ3") {survID <- "G2829"
+           } else if(cruiseSeries == "WCIBTSQ1") {survID <- "G4748"
+           } else if(cruiseSeries == "WCIBTSQ4") {survID <- "G4815"
+           } else if(cruiseSeries == "ROCKALL") {survID <- "G4436"
+           } else {survID <- -9}
+                                       
+          hlline <- paste(hlline, survID, sep = ",") #F27 - Survey - added 17/10/2025
+
           cat(hlline, file = file, sep = "\n", append = TRUE)
           rm(hlline)
         }
@@ -357,7 +379,7 @@ populateHLmeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
 }
 
 
-populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file) {
+populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, cruiseSeries, file) {
 
   for(i in 1:nrow(chronData)) {
 
@@ -439,6 +461,15 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, file)
           hlline <- paste(hlline, dev, sep = ",") #F25 - DevStage (Development or maturity stage defined by non-invasive obs)
 
           hlline <- paste(hlline, -9, sep = ",") #F26 LenMeasType (Type of length measurement)
+
+          if(cruiseSeries == "NSIBTSQ1") {survID <- "G1022"
+           } else if(cruiseSeries == "NSIBTSQ3") {survID <- "G2829"
+           } else if(cruiseSeries == "WCIBTSQ1") {survID <- "G4748"
+           } else if(cruiseSeries == "WCIBTSQ4") {survID <- "G4815"
+           } else if(cruiseSeries == "ROCKALL") {survID <- "G4436"
+           } else {survID <- -9}
+                                       
+          hlline <- paste(hlline, survID, sep = ",") #F27 - Survey - added 17/10/2025
 
           cat(hlline, file = file, sep = "\n", append = TRUE)
           rm(hlline)
@@ -589,6 +620,17 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
           
       caline <- paste(caline, -9, sep = ",") #CAF31 - ParSamp
 
+      caline <- paste(caline, -9, sep = ",") #CAF32 - LiverWeight - added 17/10/2025
+
+      if(cruiseSeries == "NSIBTSQ1") {survID <- "G1022"
+       } else if(cruiseSeries == "NSIBTSQ3") {survID <- "G2829"
+       } else if(cruiseSeries == "WCIBTSQ1") {survID <- "G4748"
+       } else if(cruiseSeries == "WCIBTSQ4") {survID <- "G4815"
+       } else if(cruiseSeries == "ROCKALL") {survID <- "G4436"
+       } else {survID <- -9}
+                                       
+      caline <- paste(caline, survID, sep = ",") #CAF33 - Survey - added 17/10/2025
+
       cat(caline, file = file, sep = "\n", append = TRUE)
       rm(caline)
 
@@ -702,6 +744,17 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
       caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
       
       caline <- paste(caline, -9, sep = ",") #CAF31 - ParSamp
+
+      caline <- paste(caline, -9, sep = ",") #CAF32 - LiverWeight - added 17/10/2025
+
+      if(cruiseSeries == "NSIBTSQ1") {survID <- "G1022"
+       } else if(cruiseSeries == "NSIBTSQ3") {survID <- "G2829"
+       } else if(cruiseSeries == "WCIBTSQ1") {survID <- "G4748"
+       } else if(cruiseSeries == "WCIBTSQ4") {survID <- "G4815"
+       } else if(cruiseSeries == "ROCKALL") {survID <- "G4436"
+       } else {survID <- -9}
+                                       
+      caline <- paste(caline, survID, sep = ",") #CAF33 - Survey - added 17/10/2025
       
       cat(caline, file = file, sep = "\n", append = TRUE)
       rm(caline)
@@ -714,6 +767,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
 # 03/11/2020 - Updated the country code and ship code in HH, HL and CA
+
 
 
 
