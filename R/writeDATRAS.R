@@ -37,27 +37,28 @@ cat("\n-------------------------------------------------------------------------
                   "WarpLength", "WarpDiameter", "WarpDensity", "DoorSurface", "DoorWeight", "DoorSpread", "WingSpread", "Buoyancy", "KiteArea", 
                   "GroundRopeWeight", "TowDirection", "SpeedGround", "SpeedWater", "SurfaceCurrentDirection", "SurfaceCurrentSpeed", "BottomCurrentDirection", "BottomCurrentSpeed", "WindDirection",
                   "WindSpeed", "SwellDirection", "SwellHeight", "SurfaceTemperature", "BottomTemperature", "SurfaceSalinity", "BottomSalinity", "ThermoCline", "ThermoClineDepth", "CodendMesh",
-                  "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelagicSamplingType", "MinTrawlDepth", "MaxTrawlDepth", sep = ",")
+                  "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelagicSamplingType", "MinTrawlDepth", "MaxTrawlDepth", "SurveyIndexArea", "Survey", "EDMO", sep = ",")
   
     cat(hhheadline, file = op, sep = "\n", append = TRUE)
     rm(hhheadline)
     
-    ca_info <- populateHH(cruiseInfo, myVessel, chronData, op)
+    ca_info <- populateHH(cruiseInfo, cruiseSeries, myVessel, chronData, op)
 
     hlheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "SpeciesValidity", "SpeciesSex", "TotalNumber", "SpeciesCategory", "SubsampledNumber", "SubsamplingFactor", "SubsampleWeight", "SpeciesCategoryWeight", "LengthCode",
-                        "LengthClass", "NumberAtlength", "DevelopmentalStage", "LengthType", sep = ",")
+                        "LengthClass", "NumberAtlength", "DevelopmentalStage", "LengthType", "Survey", sep = ",")
   
     cat(hlheadline, file = op, sep = "\n", append = TRUE)
     rm(hlheadline)
     
-    populateHLmeas(cruiseInfo, myVessel, chronData, cruiseCode, op)
+    populateHLmeas(cruiseInfo, myVessel, chronData, cruiseCode, cruiseSeries, op)
 
-    populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCode, op)
+    populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCode, cruiseSeries, op)
 
     caheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "AreaType", "AreaCode", "LengthCode", "LengthClass", "IndividualSex", "IndividualMaturity", "AgePlusGroup", "IndividualAge", "NumberAtLength",
-                        "IndividualWeight", "MaturityScale", "FishID", "GeneticSamplingFlag", "StomachSamplingFlag", "AgeSource", "AgePreparationMethod", "OtolithGrading", "ParasiteSamplingFlag", sep = ",")
+                        "IndividualWeight", "MaturityScale", "FishID", "GeneticSamplingFlag", "StomachSamplingFlag", "AgeSource", "AgePreparationMethod", "OtolithGrading", "ParasiteSamplingFlag",
+                        "LiverWeight", "Survey", sep = ",")
   
     cat(caheadline, file = op, sep = "\n", append = TRUE)
     rm(caheadline)
@@ -147,4 +148,5 @@ cat("\n-------------------------------------------------------------------------
   }
 
 }
+
 
