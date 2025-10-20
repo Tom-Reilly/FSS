@@ -106,7 +106,7 @@ cat("\n-------------------------------------------------------------------------
       cat(hhheadline, file = op, sep = "\n", append = TRUE)
       rm(hhheadline)
 
-      ca_info <- populateHH(cruiseInfo, myVessel, chronData, op)
+      ca_info <- populateHH(cruiseInfo, cruiseCodeSeries$fldSeriesName[i], myVessel, chronData, op)
 
     hlheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "SpeciesValidity", "SpeciesSex", "TotalNumber", "SpeciesCategory", "SubsampledNumber", "SubsamplingFactor", "SubsampleWeight", "SpeciesCategoryWeight", "LengthCode",
@@ -115,9 +115,9 @@ cat("\n-------------------------------------------------------------------------
       cat(hlheadline, file = op, sep = "\n", append = TRUE)
       rm(hlheadline)
       
-      populateHLmeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], op)
+      populateHLmeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
 
-      populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], op)
+      populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
       
     caheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "AreaType", "AreaCode", "LengthCode", "LengthClass", "IndividualSex", "IndividualMaturity", "AgePlusGroup", "IndividualAge", "NumberAtLength",
@@ -148,5 +148,6 @@ cat("\n-------------------------------------------------------------------------
   }
 
 }
+
 
 
