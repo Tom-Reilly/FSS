@@ -555,7 +555,8 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
         mat = convGroups %>% filter(grepl(aph, SpeciesAphiaId),
                                     OldScale %in% ca_data$Maturity[b],
                                     YearGroup == years,
-                                    grepl(cruiseInfo[["SurveyQuarter"]], Quarter)) %>%
+                                    grepl(cruiseInfo[["SurveyQuarter"]], Quarter),
+                                    grepl(ca_data$Sex[b], sex)) %>%
                               pull(NewScale)
         }
       }
@@ -749,6 +750,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
 # 03/11/2020 - Updated the country code and ship code in HH, HL and CA
+
 
 
 
