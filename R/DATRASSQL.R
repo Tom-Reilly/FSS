@@ -106,7 +106,7 @@ co_qry <- function(cruiseCode, chronData) {
   co_qry <- gsub("\\n", "", co_sql)
 }
 
-caCore_qry <- function(cruiseCode) {
+caCore_qry <- function(cruiseCode, uniqueGear) {
   
   ca_sql <- paste("
 		SELECT 
@@ -126,7 +126,7 @@ caCore_qry <- function(cruiseCode) {
   
 }
 
-caNonCore_qry <- function(cruiseCode) {
+caNonCore_qry <- function(cruiseCode, uniqueGear) {
   
   ca_sql <- paste("
 		SELECT 
@@ -146,4 +146,5 @@ caNonCore_qry <- function(cruiseCode) {
   caNonCore_qry <- gsub('\t','',ca_sql)  
   
 }
+
 
