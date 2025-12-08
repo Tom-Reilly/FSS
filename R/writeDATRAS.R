@@ -28,7 +28,8 @@ cat("\n-------------------------------------------------------------------------
 
     chronData <- sqlQuery(channel, chron_qry(cruiseCode))
 
-    uniGears = unique(chronData$GearCode)
+    unique_gear_qry <- paste("SELECT fldDATRASCode FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode IN (", unique(chronData$GearCode),")", sep="")
+    uniGears <- sqlQuery(channel, unique_gear_qry)
 
     for(j in 1:length(uniGears)) {
 
@@ -154,6 +155,7 @@ cat("\n-------------------------------------------------------------------------
   }
 
 }
+
 
 
 
