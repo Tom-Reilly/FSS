@@ -40,6 +40,7 @@ chron_qry <- function(cruiseCode) {
 	dbo.tblDataStationLogs.fldStratum AS Stratum,
 	dbo.tblDataStationLogs.fldSwellDirection AS SwellDirection,
 	dbo.tblDataGearDeployments.fldGearCode AS GearCode,
+	dbo.tblReferenceMainGearCodes.fldDATRASCode AS DATRASGear,
 	dbo.tblDataGearDeployments.fldValidityCode AS Valid,
 	dbo.tblDataGearDeployments.fldGearAdditional1 AS WarpOut,
 	dbo.tblDataGearDeployments.fldDoorSpread AS DoorSpread,
@@ -50,6 +51,7 @@ chron_qry <- function(cruiseCode) {
 	dbo.tblDataGearDeployments.fldHeadlineHeight AS HeadLine
 	 FROM dbo.tblDataStationLogs INNER JOIN dbo.tblDataGearDeployments 
 	 ON(dbo.tblDataStationLogs.fldCruiseName=dbo.tblDataGearDeployments.fldCruisename AND dbo.tblDataStationLogs.fldCruiseStationNumber=dbo.tblDataGearDeployments.fldCruiseStationNumber)
+	 JOIN dbo.tblReferenceMainGearCodes ON dbo.tblDataGearDeployments.fldGearCode = dbo.tblReferenceMainGearCodes
 	 WHERE dbo.tblDataStationLogs.fldCruiseName='" , cruiseCode, "' ORDER BY dbo.tblDataStationLogs.fldCruiseStationNumber", sep = "")
 
 chron_qry <- gsub('\n', '', chron_qry)
@@ -146,5 +148,6 @@ caNonCore_qry <- function(cruiseCode, uniqueGear) {
   caNonCore_qry <- gsub('\t','',ca_sql)  
   
 }
+
 
 
