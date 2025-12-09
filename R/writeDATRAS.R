@@ -28,8 +28,7 @@ cat("\n-------------------------------------------------------------------------
 
     chronData <- sqlQuery(channel, chron_qry(cruiseCode))
 
-    unique_gear_qry <- paste("SELECT fldDATRASCode FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode IN (", unique(chronData$GearCode),")", sep="")
-    uniGears <- sqlQuery(channel, unique_gear_qry)
+    uniGears <- unique(chronData$DATRASGear)
 
     for(j in 1:length(uniGears)) {
 
@@ -47,7 +46,7 @@ cat("\n-------------------------------------------------------------------------
     cat(hhheadline, file = op, sep = "\n", append = TRUE)
     rm(hhheadline)
     
-    ca_info <- populateHH(cruiseInfo, cruiseSeries, myVessel, chronData[chronData$GearCode == uniGears[j],], op)
+    ca_info <- populateHH(cruiseInfo, cruiseSeries, myVessel, chronData[chronData$DATRASGear == uniGears[j],], op)
 
     hlheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "SpeciesValidity", "SpeciesSex", "TotalNumber", "SpeciesCategory", "SubsampledNumber", "SubsamplingFactor", "SubsampleWeight", "SpeciesCategoryWeight", "LengthCode",
@@ -56,9 +55,9 @@ cat("\n-------------------------------------------------------------------------
     cat(hlheadline, file = op, sep = "\n", append = TRUE)
     rm(hlheadline)
     
-    populateHLmeas(cruiseInfo, myVessel, chronData[chronData$GearCode == uniGears[j],], cruiseCode, cruiseSeries, op)
+    populateHLmeas(cruiseInfo, myVessel, chronData[chronData$DATRASGear == uniGears[j],], cruiseCode, cruiseSeries, op)
 
-    populateHLnonMeas(cruiseInfo, myVessel, chronData[chronData$GearCode == uniGears[j],], cruiseCode, cruiseSeries, op)
+    populateHLnonMeas(cruiseInfo, myVessel, chronData[chronData$DATRASGear == uniGears[j],], cruiseCode, cruiseSeries, op)
 
     caheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "AreaType", "AreaCode", "LengthCode", "LengthClass", "IndividualSex", "IndividualMaturity", "AgePlusGroup", "IndividualAge", "NumberAtLength",
@@ -155,6 +154,7 @@ cat("\n-------------------------------------------------------------------------
   }
 
 }
+
 
 
 
