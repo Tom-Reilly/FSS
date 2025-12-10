@@ -123,7 +123,7 @@ caCore_qry <- function(cruiseCode, uniqueGear) {
 		AVG(a.fldFishWholeWeight) AS Weight,
     		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
 		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
-		JOIN dbo.tblReferenceMainGearCodes ON dbo.tblDataBiologicalSamples.fldGearCode = dbo.tblReferenceMainGearCodes.fldGearCode
+		JOIN dbo.tblReferenceMainGearCodes ON a.fldGearCode = dbo.tblReferenceMainGearCodes.fldGearCode
   		WHERE a.fldCruiseName='", cruiseCode, "' AND dbo.tblReferenceMainGearCodes.fldDATRASCode='", uniqueGear, "' AND a.fldResult1 is not null AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, dbo.tblReferenceMainGearCodes.fldDATRASCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") 
   ca_sql <- gsub('\n','',ca_sql)	
   caCore_qry <- gsub('\t','',ca_sql)  
@@ -145,13 +145,14 @@ caNonCore_qry <- function(cruiseCode, uniqueGear) {
 		AVG(a.fldFishWholeWeight) AS Weight,
     		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
 		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
-		JOIN dbo.tblReferenceMainGearCodes ON dbo.tblDataBiologicalSamples.fldGearCode = dbo.tblReferenceMainGearCodes.fldGearCode
+		JOIN dbo.tblReferenceMainGearCodes ON a.fldGearCode = dbo.tblReferenceMainGearCodes.fldGearCode
   		WHERE a.fldCruiseName='", cruiseCode, "' AND dbo.tblReferenceMainGearCodes.fldDATRASCode='", uniqueGear, "' AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, dbo.tblReferenceMainGearCodes.fldDATRASCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") # removed  AND fldResult1 is not null
   
   ca_sql <- gsub('\n','',ca_sql)	
   caNonCore_qry <- gsub('\t','',ca_sql)  
   
 }
+
 
 
 
