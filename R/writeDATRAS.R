@@ -35,7 +35,7 @@ cat("\n-------------------------------------------------------------------------
     op <- file(paste(path, cruiseCode, "_", uniGears[j], ".txt", sep = ""), "w")
 
     # Names changed 13/10/2025
-    hhheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month",
+    hhheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month",
                   "Day", "StartTime", "DepthStratum", "HaulDuration", "DayNight", "ShootLatitude", "ShootLongitude", "HaulLatitude", "HaulLongitude", "StatisticalRectangle", "BottomDepth",
                   "HaulValidity", "HydrographicStationID", "StandardSpeciesCode", "BycatchSpeciesCode", "DataType", "Netopening", "Rigging", "Tickler", "Distance", 
                   "WarpLength", "WarpDiameter", "WarpDensity", "DoorSurface", "DoorWeight", "DoorSpread", "WingSpread", "Buoyancy", "KiteArea", 
@@ -48,9 +48,9 @@ cat("\n-------------------------------------------------------------------------
     
     ca_info <- populateHH(cruiseInfo, cruiseSeries, myVessel, chronData[chronData$DATRASGear == uniGears[j],], op)
 
-    hlheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
+    hlheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "SpeciesValidity", "SpeciesSex", "TotalNumber", "SpeciesCategory", "SubsampledNumber", "SubsamplingFactor", "SubsampleWeight", "SpeciesCategoryWeight", "LengthCode",
-                        "LengthClass", "NumberAtlength", "DevelopmentalStage", "LengthType", "Survey", sep = ",")
+                        "LengthClass", "NumberAtlength", "DevelopmentStage", "LengthType", "Survey", sep = ",")
   
     cat(hlheadline, file = op, sep = "\n", append = TRUE)
     rm(hlheadline)
@@ -59,7 +59,7 @@ cat("\n-------------------------------------------------------------------------
 
     populateHLnonMeas(cruiseInfo, myVessel, chronData[chronData$DATRASGear == uniGears[j],], cruiseCode, cruiseSeries, op)
 
-    caheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
+    caheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "AreaType", "AreaCode", "LengthCode", "LengthClass", "IndividualSex", "IndividualMaturity", "AgePlusGroup", "IndividualAge", "NumberAtLength",
                         "IndividualWeight", "MaturityScale", "FishID", "GeneticSamplingFlag", "StomachSamplingFlag", "AgeSource", "AgePreparationMethod", "OtolithGrading", "ParasiteSamplingFlag",
                         "LiverWeight", "Survey", sep = ",")
@@ -101,7 +101,7 @@ cat("\n-------------------------------------------------------------------------
 
       op <- file(paste(path, cruiseCodeSeries$fldCruiseName[i], ".txt", sep = ""), "w")
       
-    hhheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month",
+    hhheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month",
                   "Day", "StartTime", "DepthStratum", "HaulDuration", "DayNight", "ShootLatitude", "ShootLongitude", "HaulLatitude", "HaulLongitude", "StatisticalRectangle", "BottomDepth",
                   "HaulValidity", "HydrographicStationID", "StandardSpeciesCode", "BycatchSpeciesCode", "DataType", "Netopening", "Rigging", "Tickler", "Distance", 
                   "WarpLength", "WarpDiameter", "WarpDensity", "DoorSurface", "DoorWeight", "DoorSpread", "WingSpread", "Buoyancy", "KiteArea", 
@@ -114,9 +114,9 @@ cat("\n-------------------------------------------------------------------------
 
       ca_info <- populateHH(cruiseInfo, cruiseCodeSeries$fldSeriesName[i], myVessel, chronData, op)
 
-    hlheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
+    hlheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "SpeciesValidity", "SpeciesSex", "TotalNumber", "SpeciesCategory", "SubsampledNumber", "SubsamplingFactor", "SubsampleWeight", "SpeciesCategoryWeight", "LengthCode",
-                        "LengthClass", "NumberAtlength", "DevelopmentalStage", "LengthType", sep = ",")
+                        "LengthClass", "NumberAtlength", "DevelopmentStage", "LengthType", sep = ",")
   
       cat(hlheadline, file = op, sep = "\n", append = TRUE)
       rm(hlheadline)
@@ -125,7 +125,7 @@ cat("\n-------------------------------------------------------------------------
 
       populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
       
-    caheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
+    caheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "AreaType", "AreaCode", "LengthCode", "LengthClass", "IndividualSex", "IndividualMaturity", "AgePlusGroup", "IndividualAge", "NumberAtLength",
                         "IndividualWeight", "MaturityScale", "FishID", "GeneticSamplingFlag", "StomachSamplingFlag", "AgeSource", "AgePreparationMethod", "OtolithGrading", "ParasiteSamplingFlag", sep = ",")
   
@@ -154,6 +154,7 @@ cat("\n-------------------------------------------------------------------------
   }
 
 }
+
 
 
 
