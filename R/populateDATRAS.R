@@ -91,7 +91,7 @@ populateHH <- function(cruiseInfo, cruiseSeries, myVessel, chronData, file) {
 
     #CHECK for standardised formatting (e.g. previous example: 74SC0258)
 
-    if (is.na(chronData$HydroStn[i])) {hydro <- -9 } else {hydro <- paste("74SC", sprintf("%04d", chronData$HydroStn[i]), sep = "")}
+    if (is.na(chronData$HydroStn[i]) | chronData$HydroStn[i] == 0) {hydro <- -9 } else {hydro <- paste("74SC", sprintf("%04d", chronData$HydroStn[i]), sep = "")}
 
     hhline <- paste(hhline, hydro, sep = ",") #F25 - Associated Hydro
 
@@ -750,6 +750,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
 # 03/11/2020 - Updated the country code and ship code in HH, HL and CA
+
 
 
 
