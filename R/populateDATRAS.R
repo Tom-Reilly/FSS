@@ -91,7 +91,7 @@ populateHH <- function(cruiseInfo, cruiseSeries, myVessel, chronData, file) {
 
     #CHECK for standardised formatting (e.g. previous example: 74SC0258)
 
-    if (is.na(chronData$HydroStn[i])) {hydro <- -9 } else {hydro <- paste("74SC", sprintf("%04d", chronData$HydroStn[i]), sep = "")}
+    if (is.na(chronData$HydroStn[i]) | chronData$HydroStn[i] == 0) {hydro <- -9 } else {hydro <- paste("74SC", sprintf("%04d", chronData$HydroStn[i]), sep = "")}
 
     hhline <- paste(hhline, hydro, sep = ",") #F25 - Associated Hydro
 
@@ -484,9 +484,9 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, cruis
 
 }
 
-populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, file) {
+populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, uniqueGear, file) {
 
-  ca_data <- sqlQuery(channel, caCore_qry(cruiseCode))
+  ca_data <- sqlQuery(channel, caCore_qry(cruiseCode, uniqueGear))
 
   for (b in 1:nrow(ca_data)) {
     if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","MAC","SPR","HER") && is.na(ca_data$Age[b]) == FALSE) {
@@ -626,9 +626,9 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
 
 
 
-populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, file) {
+populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, uniqueGear, file) {
 
-  ca_data <- sqlQuery(channel, caNonCore_qry(cruiseCode))
+  ca_data <- sqlQuery(channel, caNonCore_qry(cruiseCode, uniqueGear))
 
   for (b in 1:nrow(ca_data)) {
     #if(is.na(ca_data$Age[b]) == FALSE) { # Previously included only rows where there was age data
@@ -750,6 +750,8 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
 # 03/11/2020 - Updated the country code and ship code in HH, HL and CA
+
+
 
 
 
