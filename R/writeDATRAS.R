@@ -28,10 +28,14 @@ cat("\n-------------------------------------------------------------------------
 
     chronData <- sqlQuery(channel, chron_qry(cruiseCode))
 
-    op <- file(paste(path, cruiseCode, ".txt", sep = ""), "w")
+    uniGears <- unique(chronData$DATRASGear)
+
+    for(j in 1:length(uniGears)) {
+
+    op <- file(paste(path, cruiseCode, "_", uniGears[j], ".txt", sep = ""), "w")
 
     # Names changed 13/10/2025
-    hhheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month",
+    hhheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month",
                   "Day", "StartTime", "DepthStratum", "HaulDuration", "DayNight", "ShootLatitude", "ShootLongitude", "HaulLatitude", "HaulLongitude", "StatisticalRectangle", "BottomDepth",
                   "HaulValidity", "HydrographicStationID", "StandardSpeciesCode", "BycatchSpeciesCode", "DataType", "Netopening", "Rigging", "Tickler", "Distance", 
                   "WarpLength", "WarpDiameter", "WarpDensity", "DoorSurface", "DoorWeight", "DoorSpread", "WingSpread", "Buoyancy", "KiteArea", 
@@ -42,20 +46,20 @@ cat("\n-------------------------------------------------------------------------
     cat(hhheadline, file = op, sep = "\n", append = TRUE)
     rm(hhheadline)
     
-    ca_info <- populateHH(cruiseInfo, cruiseSeries, myVessel, chronData, op)
+    ca_info <- populateHH(cruiseInfo, cruiseSeries, myVessel, chronData[chronData$DATRASGear == uniGears[j],], op)
 
-    hlheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
+    hlheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "SpeciesValidity", "SpeciesSex", "TotalNumber", "SpeciesCategory", "SubsampledNumber", "SubsamplingFactor", "SubsampleWeight", "SpeciesCategoryWeight", "LengthCode",
-                        "LengthClass", "NumberAtlength", "DevelopmentalStage", "LengthType", "Survey", sep = ",")
+                        "LengthClass", "NumberAtlength", "DevelopmentStage", "LengthType", "Survey", sep = ",")
   
     cat(hlheadline, file = op, sep = "\n", append = TRUE)
     rm(hlheadline)
     
-    populateHLmeas(cruiseInfo, myVessel, chronData, cruiseCode, cruiseSeries, op)
+    populateHLmeas(cruiseInfo, myVessel, chronData[chronData$DATRASGear == uniGears[j],], cruiseCode, cruiseSeries, op)
 
-    populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCode, cruiseSeries, op)
+    populateHLnonMeas(cruiseInfo, myVessel, chronData[chronData$DATRASGear == uniGears[j],], cruiseCode, cruiseSeries, op)
 
-    caheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
+    caheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "AreaType", "AreaCode", "LengthCode", "LengthClass", "IndividualSex", "IndividualMaturity", "AgePlusGroup", "IndividualAge", "NumberAtLength",
                         "IndividualWeight", "MaturityScale", "FishID", "GeneticSamplingFlag", "StomachSamplingFlag", "AgeSource", "AgePreparationMethod", "OtolithGrading", "ParasiteSamplingFlag",
                         "LiverWeight", "Survey", sep = ",")
@@ -63,11 +67,13 @@ cat("\n-------------------------------------------------------------------------
     cat(caheadline, file = op, sep = "\n", append = TRUE)
     rm(caheadline)
     
-    populateCAcore(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, op)
+    populateCAcore(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, uniGears[j], op)
 
-    populateCAnoncore(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, op)
+    populateCAnoncore(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, uniGears[j], op)
 
     close(op)
+
+    }
 
     rm(list = c("cruiseInfo", "vesselName", "myVessel", "chronData"))
 
@@ -93,9 +99,13 @@ cat("\n-------------------------------------------------------------------------
 
       chronData <- sqlQuery(channel, chron_qry(cruiseCodeSeries$fldCruiseName[i]))
 
-      op <- file(paste(path, cruiseCodeSeries$fldCruiseName[i], ".txt", sep = ""), "w")
+      uniGears <- unique(chronData$DATRASGear)
+
+      for(j in 1:length(uniGears)) {
+
+      op <- file(paste(path, cruiseCodeSeries$fldCruiseName[i], "_", uniGears[j], ".txt", sep = ""), "w")
       
-    hhheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month",
+    hhheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month",
                   "Day", "StartTime", "DepthStratum", "HaulDuration", "DayNight", "ShootLatitude", "ShootLongitude", "HaulLatitude", "HaulLongitude", "StatisticalRectangle", "BottomDepth",
                   "HaulValidity", "HydrographicStationID", "StandardSpeciesCode", "BycatchSpeciesCode", "DataType", "Netopening", "Rigging", "Tickler", "Distance", 
                   "WarpLength", "WarpDiameter", "WarpDensity", "DoorSurface", "DoorWeight", "DoorSpread", "WingSpread", "Buoyancy", "KiteArea", 
@@ -106,31 +116,33 @@ cat("\n-------------------------------------------------------------------------
       cat(hhheadline, file = op, sep = "\n", append = TRUE)
       rm(hhheadline)
 
-      ca_info <- populateHH(cruiseInfo, cruiseCodeSeries$fldSeriesName[i], myVessel, chronData, op)
+      ca_info <- populateHH(cruiseInfo, cruiseCodeSeries$fldSeriesName[i], myVessel, chronData[chronData$DATRASGear == uniGears[j],], op)
 
-    hlheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
+    hlheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "SpeciesValidity", "SpeciesSex", "TotalNumber", "SpeciesCategory", "SubsampledNumber", "SubsamplingFactor", "SubsampleWeight", "SpeciesCategoryWeight", "LengthCode",
-                        "LengthClass", "NumberAtlength", "DevelopmentalStage", "LengthType", sep = ",")
+                        "LengthClass", "NumberAtlength", "DevelopmentStage", "LengthType", sep = ",")
   
       cat(hlheadline, file = op, sep = "\n", append = TRUE)
       rm(hlheadline)
       
-      populateHLmeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
+      populateHLmeas(cruiseInfo, myVessel, chronData[chronData$DATRASGear == uniGears[j],], cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
 
-      populateHLnonMeas(cruiseInfo, myVessel, chronData, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
+      populateHLnonMeas(cruiseInfo, myVessel, chronData[chronData$DATRASGear == uniGears[j],], cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
       
-    caheadline <- paste("RecordType", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
+    caheadline <- paste("RecordHeader", "Quarter", "Country", "Platform", "Gear", "SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "SpeciesCodeType",
                         "SpeciesCode", "AreaType", "AreaCode", "LengthCode", "LengthClass", "IndividualSex", "IndividualMaturity", "AgePlusGroup", "IndividualAge", "NumberAtLength",
                         "IndividualWeight", "MaturityScale", "FishID", "GeneticSamplingFlag", "StomachSamplingFlag", "AgeSource", "AgePreparationMethod", "OtolithGrading", "ParasiteSamplingFlag", sep = ",")
   
       cat(caheadline, file = op, sep = "\n", append = TRUE)
       rm(caheadline)
 
-      populateCAcore(cruiseInfo, myVessel, ca_info, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
+      populateCAcore(cruiseInfo, myVessel, ca_info, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], uniGears[j], op)
 
-      populateCAnoncore(cruiseInfo, myVessel, ca_info, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], op)
+      populateCAnoncore(cruiseInfo, myVessel, ca_info, cruiseCodeSeries$fldCruiseName[i], cruiseCodeSeries$fldSeriesName[i], uniGears[j], op)
 
       close(op)
+
+      }
 
       rm(list = c("cruiseInfo", "vesselName", "myVessel", "chronData"))
 
@@ -148,6 +160,11 @@ cat("\n-------------------------------------------------------------------------
   }
 
 }
+
+
+
+
+
 
 
 

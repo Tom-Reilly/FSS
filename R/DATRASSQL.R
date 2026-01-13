@@ -40,6 +40,7 @@ chron_qry <- function(cruiseCode) {
 	dbo.tblDataStationLogs.fldStratum AS Stratum,
 	dbo.tblDataStationLogs.fldSwellDirection AS SwellDirection,
 	dbo.tblDataGearDeployments.fldGearCode AS GearCode,
+	dbo.tblReferenceMainGearCodes.fldDATRASCode AS DATRASGear,
 	dbo.tblDataGearDeployments.fldValidityCode AS Valid,
 	dbo.tblDataGearDeployments.fldGearAdditional1 AS WarpOut,
 	dbo.tblDataGearDeployments.fldDoorSpread AS DoorSpread,
@@ -50,6 +51,7 @@ chron_qry <- function(cruiseCode) {
 	dbo.tblDataGearDeployments.fldHeadlineHeight AS HeadLine
 	 FROM dbo.tblDataStationLogs INNER JOIN dbo.tblDataGearDeployments 
 	 ON(dbo.tblDataStationLogs.fldCruiseName=dbo.tblDataGearDeployments.fldCruisename AND dbo.tblDataStationLogs.fldCruiseStationNumber=dbo.tblDataGearDeployments.fldCruiseStationNumber)
+	 JOIN dbo.tblReferenceMainGearCodes ON dbo.tblDataGearDeployments.fldGearCode = dbo.tblReferenceMainGearCodes.fldGearCode
 	 WHERE dbo.tblDataStationLogs.fldCruiseName='" , cruiseCode, "' ORDER BY dbo.tblDataStationLogs.fldCruiseStationNumber", sep = "")
 
 chron_qry <- gsub('\n', '', chron_qry)
@@ -106,12 +108,13 @@ co_qry <- function(cruiseCode, chronData) {
   co_qry <- gsub("\\n", "", co_sql)
 }
 
-caCore_qry <- function(cruiseCode) {
+caCore_qry <- function(cruiseCode, uniqueGear) {
   
   ca_sql <- paste("
 		SELECT 
 		a.fldCruiseStationNumber AS Haul,
 		a.fldGearCode AS GearCode,
+		dbo.tblReferenceMainGearCodes.fldDATRASCode AS DATRASGear,
 		a.fldMainSpeciesCode AS SpCode, 
 		a.fldFishLength AS Lngth,
 		a.fldFishSex as Sex, 
@@ -120,18 +123,20 @@ caCore_qry <- function(cruiseCode) {
 		AVG(a.fldFishWholeWeight) AS Weight,
     		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
 		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
-  		WHERE a.fldCruiseName='", cruiseCode, "' AND a.fldResult1 is not null AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") 
+		JOIN dbo.tblReferenceMainGearCodes ON a.fldGearCode = dbo.tblReferenceMainGearCodes.fldGearCode
+  		WHERE a.fldCruiseName='", cruiseCode, "' AND dbo.tblReferenceMainGearCodes.fldDATRASCode='", uniqueGear, "' AND a.fldResult1 is not null AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, dbo.tblReferenceMainGearCodes.fldDATRASCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") 
   ca_sql <- gsub('\n','',ca_sql)	
   caCore_qry <- gsub('\t','',ca_sql)  
   
 }
 
-caNonCore_qry <- function(cruiseCode) {
+caNonCore_qry <- function(cruiseCode, uniqueGear) {
   
   ca_sql <- paste("
 		SELECT 
 		a.fldCruiseStationNumber AS Haul,
 		a.fldGearCode AS GearCode,
+		dbo.tblReferenceMainGearCodes.fldDATRASCode AS DATRASGear,
 		a.fldMainSpeciesCode AS SpCode, 
 		a.fldFishLength AS Lngth,
 		a.fldFishSex as Sex, 
@@ -140,9 +145,16 @@ caNonCore_qry <- function(cruiseCode) {
 		AVG(a.fldFishWholeWeight) AS Weight,
     		COUNT(a.fldInternalBiologicalSampleID) AS CaNoAtLen  
 		FROM dbo.tblDataBiologicalSamples a INNER JOIN dbo.tblDataGearDeployments b ON(a.fldCruiseName=b.fldCruisename AND a.fldCruiseStationNumber=b.fldCruiseStationNumber)
-  		WHERE a.fldCruiseName='", cruiseCode, "' AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") # removed  AND fldResult1 is not null
+		JOIN dbo.tblReferenceMainGearCodes ON a.fldGearCode = dbo.tblReferenceMainGearCodes.fldGearCode
+  		WHERE a.fldCruiseName='", cruiseCode, "' AND dbo.tblReferenceMainGearCodes.fldDATRASCode='", uniqueGear, "' AND b.fldValidityCode='V' GROUP BY a.fldCruiseStationNumber, a.fldGearCode, dbo.tblReferenceMainGearCodes.fldDATRASCode, a.fldMainSpeciesCode,  a.fldFishLength, a.fldFishSex, a.fldFishMaturity, a.fldResult1; ", sep = "") # removed  AND fldResult1 is not null
   
   ca_sql <- gsub('\n','',ca_sql)	
   caNonCore_qry <- gsub('\t','',ca_sql)  
   
 }
+
+
+
+
+
+
