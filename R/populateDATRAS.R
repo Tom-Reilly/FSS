@@ -125,7 +125,11 @@ populateHH <- function(cruiseInfo, cruiseSeries, myVessel, chronData, file) {
     hhline <- paste(hhline, wop, sep = ",") #F33 - Warplength
 
     hhline <- paste(hhline, gear_detail$fldDATRASWarpDia[1], sep = ",") #F34 - Warpdia
-    hhline <- paste(hhline, gear_detail$fldDATRASWarpDen[1], sep = ",") #F35 - WarpDen
+
+    if(is.na(gear_detail$fldDATRASWarpDen[1])) {wrpden <- -9} else {wrpden <- gear_detail$fldDATRASWarpDen[1]}
+    hhline <- paste(hhline, wrpden, sep = ",") #F35 - WarpDen
+    #hhline <- paste(hhline, gear_detail$fldDATRASWarpDen[1], sep = ",") #F35 - WarpDen
+    
     hhline <- paste(hhline, gear_detail$fldDATRASDoorSurface[1], sep = ",") #F36 - DoorSurf
     hhline <- paste(hhline, gear_detail$fldDATRASDoorWgt[1], sep = ",") #F37 - DoorWgt
 
@@ -137,9 +141,17 @@ populateHH <- function(cruiseInfo, cruiseSeries, myVessel, chronData, file) {
 
     hhline <- paste(hhline, wsp, sep = ",") #F39 - Wing Spread
 
-    hhline <- paste(hhline, gear_detail$fldDATRASBuoyancy[1], sep = ",") #F40 - Buoyancy
-    hhline <- paste(hhline, gear_detail$fldDATRASKiteDim[1], sep = ",") #F41 - Kite Dim
-    hhline <- paste(hhline, gear_detail$fldDATRASWgtGroundRope[1], sep = ",") #F42 - Wgt GroundRope
+    if(is.na(gear_detail$fldDATRASBuoyancy[1])) {buoy <- -9} else {buoy <- gear_detail$fldDATRASBuoyancy[1]}
+    hhline <- paste(hhline, buoy, sep = ",") #F40 - Buoyancy
+    #hhline <- paste(hhline, gear_detail$fldDATRASBuoyancy[1], sep = ",") #F40 - Buoyancy
+
+    if(is.na(gear_detail$fldDATRASKiteDim[1])) {kite <- -9} else {kite <- gear_detail$fldDATRASKiteDim[1]}
+    hhline <- paste(hhline, kite, sep = ",") #F41 - Kite Dim
+    #hhline <- paste(hhline, gear_detail$fldDATRASKiteDim[1], sep = ",") #F41 - Kite Dim
+
+    if(is.na(gear_detail$fldDATRASWgtGroundRope[1])) {wgtrope <- -9} else {wgtrope <- gear_detail$fldDATRASWgtGroundRope[1]}
+    hhline <- paste(hhline, wgtrope, sep = ",") #F42 - Wgt GroundRope
+    #hhline <- paste(hhline, gear_detail$fldDATRASWgtGroundRope[1], sep = ",") #F42 - Wgt GroundRope
 
     if(is.na(chronData$TowDir[i])) {tdir <- -9} else {tdir <- chronData$TowDir[i]}
 
@@ -750,6 +762,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
 # 03/11/2020 - Updated the country code and ship code in HH, HL and CA
+
 
 
 
