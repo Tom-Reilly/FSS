@@ -447,7 +447,7 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, cruis
 
           hlline <- paste(hlline, 11, sep = ",") #F17 - CatIdentifier
 
-          hlline <- paste(hlline, -9, sep = ",") #F18- NoMeas
+          hlline <- paste(hlline, 1, sep = ",") #F18- NoMeas #16/02/2026 changed from -9 to 1 for db
 
           hlline <- paste(hlline, "1.0000", sep = ",") #F19 - SubFactor
 
@@ -762,6 +762,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
 # 02/11/2017 - Updated the HH file to always receive stratum (previously -9) and the CA file to always receive stat sq (previously stratum or stat sq if no stratum available)
 # 03/11/2020 - Updated the country code and ship code in HH, HL and CA
+
 
 
 
