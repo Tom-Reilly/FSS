@@ -499,7 +499,7 @@ populateHLnonMeas <- function(cruiseInfo, myVessel, chronData, cruiseCode, cruis
 populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeries, uniqueGear, file) {
 
   ca_data <- sqlQuery(channel, caCore_qry(cruiseCode, uniqueGear))
-
+  print(paste("total rows: ",nrow(ca_data)))
   for (b in 1:nrow(ca_data)) {
     if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","MAC","SPR","HER")) { # && is.na(ca_data$Age[b]) == FALSE
 
@@ -552,7 +552,7 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
       } else {
         sx = ca_data$Sex[b]
       }
-
+print(paste("sex is ", ca_data$Sex[b], " ", sx)}
       caline <- paste(caline, sx, sep = ",") #CAF18 - Sex
 
       # set whether to use pre-2024 maturity scale or post
@@ -572,13 +572,13 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
                               pull(NewScale)
         }
       }
-
+print(paste("mat is ", ca_data$Maturity[b], " ", mat)}
       caline <- paste(caline, mat, sep = ",") #CAF19 - Maturity
 
       caline <- paste(caline, -9, sep = ",") #CAF20 - Plus group
 
       if(is.na(ca_data$Age[b])) {age <- -9 } else {age <- ca_data$Age[b]}
-
+print(paste("age is ", ca_data$Age[b], " ", age)}
       caline <- paste(caline, age, sep = ",") #CAF21 - Age rings
 
       caline <- paste(caline, ca_data$CaNoAtLen[b], sep = ",") #CAF22 - CANoatlegth
