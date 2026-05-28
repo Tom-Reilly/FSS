@@ -573,6 +573,21 @@ print(paste("sex is ", ca_data$Sex[b], " ", sx)}
         }
       }
 print(paste("mat is ", ca_data$Maturity[b], " ", mat)}
+print(paste("species ", convGroups %>% filter(grepl(aph, SpeciesAphiaId))))
+print(paste("species+mat ", convGroups %>% filter(grepl(aph, SpeciesAphiaId),
+                                    OldScale %in% ca_data$Maturity[b])))
+print(paste("species+mat+years ", convGroups %>% filter(grepl(aph, SpeciesAphiaId),
+                                    OldScale %in% ca_data$Maturity[b],
+                                    YearGroup == years)))
+print(paste("species+mat+years+quarter ", convGroups %>% filter(grepl(aph, SpeciesAphiaId),
+                                    OldScale %in% ca_data$Maturity[b],
+                                    YearGroup == years,
+                                    grepl(cruiseInfo[["SurveyQuarter"]], Quarter))))
+print(paste("species+mat+years+quarter+sex ", convGroups %>% filter(grepl(aph, SpeciesAphiaId),
+                                    OldScale %in% ca_data$Maturity[b],
+                                    YearGroup == years,
+                                    grepl(cruiseInfo[["SurveyQuarter"]], Quarter),
+                                    grepl(ca_data$Sex[b], sex))))
       caline <- paste(caline, mat, sep = ",") #CAF19 - Maturity
 
       caline <- paste(caline, -9, sep = ",") #CAF20 - Plus group
