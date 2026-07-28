@@ -612,8 +612,17 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
       caline <- paste(caline, agesrc, sep = ",") #CAF28 - AgeSource
       caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
       caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
-          
-      caline <- paste(caline, -9, sep = ",") #CAF31 - ParSamp
+
+      if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","HAK") {
+      ParSamp = parasiteLookup %>% filter(
+                            grepl(aph, SpeciesAphiaID),
+                            YearGroup == years,
+                            grepl(cruiseInfo[["SurveyQuarter"]], Quarter),
+                            grepl(ca_data$Sex[b], Sex)) %>%
+                            pull(ParasiteSamplingFlag)
+      } else {ParSamp = "-9"}
+      
+      caline <- paste(caline, ParSamp, sep = ",") #CAF31 - ParSamp
 
       caline <- paste(caline, -9, sep = ",") #CAF32 - LiverWeight - added 17/10/2025
 
@@ -737,8 +746,17 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
       caline <- paste(caline, agesrc, sep = ",") #CAF28 - AgeSource
       caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
       caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
+
+      if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","HAK") {
+      ParSamp = parasiteLookup %>% filter(
+                            grepl(aph, SpeciesAphiaID),
+                            YearGroup == years,
+                            grepl(cruiseInfo[["SurveyQuarter"]], Quarter),
+                            grepl(ca_data$Sex[b], Sex)) %>%
+                            pull(ParasiteSamplingFlag)
+      } else {ParSamp = "-9"}
       
-      caline <- paste(caline, -9, sep = ",") #CAF31 - ParSamp
+      caline <- paste(caline, ParSamp, sep = ",") #CAF31 - ParSamp
 
       caline <- paste(caline, -9, sep = ",") #CAF32 - LiverWeight - added 17/10/2025
 
