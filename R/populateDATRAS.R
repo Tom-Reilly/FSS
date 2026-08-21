@@ -501,7 +501,7 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
   ca_data <- sqlQuery(channel, caCore_qry(cruiseCode, uniqueGear))
 
   for (b in 1:nrow(ca_data)) {
-    if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","MAC","SPR","HER")) { # && is.na(ca_data$Age[b]) == FALSE
+    if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","MAC","SPR","HER","HAK")) { # && is.na(ca_data$Age[b]) == FALSE
 
       ca_gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", ca_data$GearCode[b], sep = "")
       ca_gear_detail <- sqlQuery(channel, ca_gear_qry)
@@ -653,7 +653,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
 
   for (b in 1:nrow(ca_data)) {
     #if(is.na(ca_data$Age[b]) == FALSE) { # Previously included only rows where there was age data
-    if(!ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","MAC","SPR","HER") && is.na(ca_data$Lngth[b]) == FALSE && is.na(ca_data$Weight[b]) == FALSE) { # Added 08/05/2017: add in all rows where both length and weight data available
+    if(!ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","MAC","SPR","HER","HAK") && is.na(ca_data$Lngth[b]) == FALSE && is.na(ca_data$Weight[b]) == FALSE) { # Added 08/05/2017: add in all rows where both length and weight data available
 
       ca_gear_qry <- paste("SELECT * FROM dbo.tblReferenceMainGearCodes WHERE fldGearCode=", ca_data$GearCode[b], sep = "")
       ca_gear_detail <- sqlQuery(channel, ca_gear_qry)
