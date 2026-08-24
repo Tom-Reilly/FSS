@@ -613,7 +613,7 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
       caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
       caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
 
-      if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","HAK") {
+      if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","HAK")) {
       ParSamp = parasiteLookup %>% filter(
                             grepl(aph, SpeciesAphiaID),
                             YearGroup == years,
@@ -747,7 +747,7 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
       caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
       caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
 
-      if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","HAK") {
+      if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","HAK")) {
       ParSamp = parasiteLookup %>% filter(
                             grepl(aph, SpeciesAphiaID),
                             YearGroup == years,
