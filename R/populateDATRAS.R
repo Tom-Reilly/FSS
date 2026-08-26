@@ -613,10 +613,13 @@ populateCAcore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseSeri
       caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
       caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
 
+      # set whether to use pre-2024 parasite flag or post
+      if(ca_info[ca_info[, 1] == ca_data$Haul[b], 2] <= 2025) {paraYears = 2025} else {paraYears = 2026}
+
       if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","HAK")) {
       ParSamp = parasiteLookup %>% filter(
                             grepl(aph, SpeciesAphiaID),
-                            YearGroup == years,
+                            YearGroup == paraYears,
                             grepl(cruiseInfo[["SurveyQuarter"]], Quarter),
                             grepl(ca_data$Sex[b], Sex)) %>%
                             pull(ParasiteSamplingFlag)
@@ -747,10 +750,13 @@ populateCAnoncore <- function(cruiseInfo, myVessel, ca_info, cruiseCode, cruiseS
       caline <- paste(caline, -9, sep = ",") #CAF29 - AgePrepMet
       caline <- paste(caline, -9, sep = ",") #CAF30 - OtGrading
 
+      # set whether to use pre-2024 maturity scale or post
+      if(ca_info[ca_info[, 1] == ca_data$Haul[b], 2] <= 2025) {paraYears = 2025} else {paraYears = 2026}
+
       if(ca_data$SpCode[b] %in% c("COD","HAD","WHI","SAI","NPO","HAK")) {
       ParSamp = parasiteLookup %>% filter(
                             grepl(aph, SpeciesAphiaID),
-                            YearGroup == years,
+                            YearGroup == paraYears,
                             grepl(cruiseInfo[["SurveyQuarter"]], Quarter),
                             grepl(ca_data$Sex[b], Sex)) %>%
                             pull(ParasiteSamplingFlag)
